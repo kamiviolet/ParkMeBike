@@ -1,5 +1,5 @@
 import {StyleSheet, View, Text, Pressable, Button} from 'react-native'
-import { Slider } from '@rneui/themed';
+import { Slider, Icon } from '@rneui/themed';
 
 
 
@@ -17,6 +17,20 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
         minimumTrackTintColor='#ffffff'
         maximumTrackTintColor='#000000'
         step={1}
+        allowTouchTrack
+        trackStyle={{ height: 5, backgroundColor: 'transparent' }}
+        thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
+        thumbProps={{
+          children: (
+            <Icon
+              name="bicycle"
+              type="font-awesome"
+              size={20}
+              reverse
+              containerStyle={{bottom: 20, right: 20}}
+            />
+          )
+        }}
         onSlidingComplete={(e)=>{
           setLocationParams({...locationParams, radius: e})
         }}
@@ -31,6 +45,20 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
         minimumTrackTintColor='#ffffff'
         maximumTrackTintColor='#000000'
         step={1}
+        allowTouchTrack
+        trackStyle={{ height: 5, backgroundColor: 'transparent' }}
+        thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
+        thumbProps={{
+          children: (
+            <Icon
+              name="bicycle"
+              type="font-awesome"
+              size={20}
+              reverse
+              containerStyle={{bottom: 20, right: 20}}
+            />
+          )
+        }}
         onSlidingComplete={(e)=>{
           setParkingLimit(e)
         }}

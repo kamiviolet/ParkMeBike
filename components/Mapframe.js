@@ -51,26 +51,26 @@ export default function Mapframe({
           loadingEnabled={true}
           // toolbarEnabled={true}
           showsTraffic={true}
-          // showsIndoors={true}
-          // initialRegion={{
+          showsIndoors={true}
+          initialRegion={{
 
-          //     // latitudeDelta: 0.0922,
-          //     // longitudeDelta: 0.0421,
-          //     latitudeDelta: 0.1,
-          //     longitudeDelta: 0.1
-          // }}
-          // initialCamera={{
-          //     latitude: locationParams.location.latitude,
-          //     longitude: locationParams.location.longitude,
-          //     latitudeDelta: 0.1,
-          //     longitudeDelta: 0.1
-          // }}
+              // latitudeDelta: 0.0922,
+              // longitudeDelta: 0.0421,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1
+          }}
+          initialCamera={{
+              latitude: locationParams.location.latitude,
+              longitude: locationParams.location.longitude,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1
+          }}
         >
-          {/* {
+          {
                         pointsOfInterest.map(({properties, geometry}) => {
                              return <ParkingLots properties={properties} geometry={geometry} key={properties.id} />
                         })
-                    } */}
+                    }
         </MapView>
         <Modal
           animationType="slide"
