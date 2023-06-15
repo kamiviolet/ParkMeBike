@@ -50,7 +50,7 @@ export default function Mapframe({
           showsMyLocationButton={true}
           loadingEnabled={true}
           // toolbarEnabled={true}
-          // showsTraffic={true}
+          showsTraffic={true}
           // showsIndoors={true}
           // initialRegion={{
 
