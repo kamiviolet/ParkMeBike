@@ -6,8 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import { Images, Colors, auth, db } from '../config';
-console.log({ auth: auth });
-console.log({ db });
+
 import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
 import { collection, doc, setDoc } from 'firebase/firestore';

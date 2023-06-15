@@ -20,6 +20,7 @@ export const HomeScreen = () => {
   };
 
   const handlePressDashboard = () => {
+    
     navigation.navigate('Dashboard');
   };
 
