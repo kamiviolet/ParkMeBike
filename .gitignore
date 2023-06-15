@@ -1,5 +1,5 @@
 node_modules/**/*
-.expo/*
+
 npm-debug.*
 *.jks
 *.p8
@@ -16,11 +16,11 @@ web-report/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+# Icon
 
 
 # Thumbnails
-._*
+# ._*
 
 # Files that might appear in the root of a volume
 .DocumentRevisions-V100
@@ -40,3 +40,5 @@ Temporary Items
 
 # Project related
 .env
+
+notes.md

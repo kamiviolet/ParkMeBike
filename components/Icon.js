@@ -11,3 +11,5 @@ export const Icon = ({ name, size, color, style }) => {
     />
   );
 };
+
+<MaterialCommunityIcons name="bicycle" size={24} color="black" />;
