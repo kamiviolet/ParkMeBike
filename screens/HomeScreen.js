@@ -15,8 +15,12 @@ export const HomeScreen = () => {
     signOut(auth).catch((error) => console.log('Error logging out: ', error));
   };
 
-  const handlePressMe = () => {
+  const handlePressProfile = () => {
     navigation.navigate('UserProfile');
+  };
+
+  const handlePressDashboard = () => {
+    navigation.navigate('Dashboard');
   };
 
   return (
@@ -30,8 +34,11 @@ export const HomeScreen = () => {
           />
           <Text style={styles.userName}>Park Me Bike User</Text>
         </View>
-        <Pressable style={styles.pressableButton} onPress={handlePressMe}>
+        <Pressable style={styles.pressableButton} onPress={handlePressProfile}>
           <Text style={styles.buttonText}>User Profile</Text>
+        </Pressable>
+        <Pressable style={styles.pressableButton} onPress={handlePressDashboard}>
+          <Text style={styles.buttonText}>Dashboard</Text>
         </Pressable>
       </View>
       <View style={styles.signOutButton}>

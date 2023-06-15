@@ -1,4 +1,6 @@
 import { HomeScreen, UserProfile } from '../screens';
+import Dashboard from '../screens/Dashboard';
+
 
 import React, { useContext } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -22,6 +24,7 @@ export const AppStack = () => {
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="UserProfile" component={UserProfileWithAuth} />
+      <Stack.Screen name="Dashboard" component={Dashboard} option={{title: "Map"}} />
     </Stack.Navigator>
   );
 };
