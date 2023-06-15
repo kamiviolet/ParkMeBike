@@ -1,5 +1,6 @@
 import {StyleSheet, View, Text, Pressable, Button} from 'react-native'
 import { Slider, Icon } from '@rneui/themed';
+import { color } from 'react-native-reanimated';
 
 
 
@@ -8,7 +9,7 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
     return (
         <>
         <View style={styles.sliderWrapper}>
-        <Text>Set the radius</Text>
+        <Text style={styles.heading}>Radius</Text>
         <Slider 
         style={styles.radiusSlider} 
         value={10}
@@ -35,8 +36,8 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
           setLocationParams({...locationParams, radius: e})
         }}
     />
-    <Text>Value: {locationParams.radius}</Text>
-    <Text>Bike Parking Places</Text>
+    <Text style={styles.label}>{locationParams.radius} km</Text>
+    <Text style={styles.heading}>Bike Parks</Text>
       <Slider
         style={styles.limitSlider} 
         value={1}
@@ -63,7 +64,7 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
           setParkingLimit(e)
         }}
     />
-    <Text>Value: {parkingLimit}</Text>
+    <Text style={styles.label}>{parkingLimit} bike parks</Text>
     <Button title="close" onPress={()=>{setModalVisible(false)}}>Close</Button>
     </View>
     </>
@@ -77,7 +78,8 @@ const styles = StyleSheet.create({
         top: 20,
         zIndex: 3,
         width: '100%',
-        backgroundColor: 'purple'
+        backgroundColor: '#000000c0',
+        borderRadius: 20,   
       },
       radiusSlider: {
         // position: 'relative',
@@ -90,6 +92,14 @@ const styles = StyleSheet.create({
         // top: 70,
         zIndex: 3,
         width: '100%',
+      },
+      label: {
+        color: 'white'
+      },
+      heading: {
+        padding: 10,
+        color: 'white',
+        fontSize: 20
       }
 
     
