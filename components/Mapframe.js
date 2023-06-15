@@ -93,7 +93,6 @@ export default function Mapframe({
           onPress={() => setModalVisible(!modalVisible)}
           title="ControlPanel"
         >
-          Press me
         </Button>
       </View>
       // </SafeAreaView>
