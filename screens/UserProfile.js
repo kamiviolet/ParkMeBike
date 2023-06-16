@@ -7,7 +7,7 @@ import uuid from 'uuid';
 import { db } from '../config';
 
 const uriToBlob = (uri) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => { //returns a promise that resolves with blob object, make http requests in js
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
       resolve(xhr.response);
@@ -15,18 +15,18 @@ const uriToBlob = (uri) => {
     xhr.onerror = function () {
       reject(new TypeError('Network request failed!'));
     };
-    xhr.responseType = 'blob';
-    xhr.open('GET', uri, true);
-    xhr.send(null);
+    xhr.responseType = 'blob'; 
+    xhr.open('GET', uri, true); // 
+    xhr.send(null); //set to null GET requests don't have body
   });
 };
 
 const uploadImageAsync = (uri) => {
-  return uriToBlob(uri).then((blob) => {
+  return uriToBlob(uri).then((blob) => { //calls blob passes uri to it
     const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`);
-    return uploadBytes(fileRef, blob).then(() => {
-      blob.close();
-      return getDownloadURL(fileRef);
+    return uploadBytes(fileRef, blob).then(() => { //when blob is ready, uploads to firebase storage
+      blob.close(); //frees up memory
+      return getDownloadURL(fileRef); //gets download url of image
     });
   });
 };
@@ -64,7 +64,7 @@ export const UserProfile = ({ userId }) => {
       })
       .catch((error) => console.log('Error fetching user data!: ', error));
   };
-
+  //asking permission to access device media library
   const handleProfileImageUpload = () => {
     ImagePicker.requestMediaLibraryPermissionsAsync()
       .then((permissionResult) => {

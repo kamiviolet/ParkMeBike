@@ -10,7 +10,7 @@ import { View, TextInput, Button, FormErrorMessage } from '../components';
 export const ForgotPasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
 
-  const handleSendPasswordResetEmail = values => {
+  const handleSendPasswordResetEmail = (values) => {
     const { email } = values;
 
     sendPasswordResetEmail(auth, email)
@@ -18,7 +18,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
         console.log('Success: Password Reset Email sent.');
         navigation.navigate('Login');
       })
-      .catch(error => setErrorState(error.message));
+      .catch((error) => setErrorState(error.message));
   };
 
   return (
@@ -29,7 +29,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
       <Formik
         initialValues={{ email: '' }}
         validationSchema={passwordResetSchema}
-        onSubmit={values => handleSendPasswordResetEmail(values)}
+        onSubmit={(values) => handleSendPasswordResetEmail(values)}
       >
         {({
           values,
@@ -37,17 +37,17 @@ export const ForgotPasswordScreen = ({ navigation }) => {
           errors,
           handleChange,
           handleSubmit,
-          handleBlur
+          handleBlur,
         }) => (
           <>
             {/* Email input field */}
             <TextInput
-              name='email'
-              leftIconName='email'
-              placeholder='Enter email'
-              autoCapitalize='none'
-              keyboardType='email-address'
-              textContentType='emailAddress'
+              name="email"
+              leftIconName="email"
+              placeholder="Enter email"
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
               value={values.email}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
@@ -79,16 +79,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   innercontainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
-    paddingTop: 20
+    paddingTop: 20,
   },
   button: {
     width: '100%',
@@ -97,16 +97,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: Colors.orange,
     padding: 10,
-    borderRadius: 8
+    borderRadius: 8,
   },
   buttonText: {
     fontSize: 20,
     color: Colors.white,
-    fontWeight: '700'
+    fontWeight: '700',
   },
   borderlessButtonContainer: {
     marginTop: 16,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
