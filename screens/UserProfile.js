@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TextInput, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, TextInput, Button, Pressable, Modal } from 'react-native';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -25,10 +25,20 @@ const uriToBlob = (uri) => {
 
 const uploadImageAsync = (uri) => {
   return uriToBlob(uri).then((blob) => { //calls blob passes uri to it
-    const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`);
+    const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`); // uuid generates random unique id for the image
     return uploadBytes(fileRef, blob).then(() => { //when blob is ready, uploads to firebase storage
       blob.close(); //frees up memory
       return getDownloadURL(fileRef); //gets download url of image
+    });
+  });
+};
+//same as above with the bike image
+const uploadBikeImageAsync = (uri) => { 
+  return uriToBlob(uri).then((blob) => {
+    const fileRef = ref(getStorage(), `bikeImages/9d14d199-178a-412f-b978-41d741db901c`); // uuid generates random unique id for the image
+    return uploadBytes(fileRef, blob).then(() => {
+      blob.close();
+      return getDownloadURL(fileRef);
     });
   });
 };
@@ -38,6 +48,8 @@ export const UserProfile = ({ userId }) => {
   const [newName, setNewName] = useState('');
   const [newLocation, setNewLocation] = useState('');
   const [newProfileImage, setNewProfileImage] = useState(null);
+  const [newBikeImage, setNewBikeImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -60,6 +72,7 @@ export const UserProfile = ({ userId }) => {
             email: userData.email,
             profileImage: userData.profileImage,
             location: userData.location,
+            bikeImage: userData.bikeImage
             // other user stuff
           });
         }
@@ -84,6 +97,23 @@ export const UserProfile = ({ userId }) => {
       })
       .catch((error) => console.log('Error during image selection!: ', error));
   };
+//asking permission to open camera
+  const handleCameraImageUpload = () => {
+    ImagePicker.requestCameraPermissionsAsync()
+      .then((permissionResult) => {
+        if (!permissionResult.granted) {
+          alert('Permission to access camera is required!');
+          return;
+        }
+        return ImagePicker.launchCameraAsync();
+      })
+      .then((pickerResult) => {
+        if (pickerResult && !pickerResult.canceled) {
+          setNewBikeImage(pickerResult.assets[0].uri);
+        }
+      })
+      .catch((error) => console.log('Error during the picture capture: ', error));
+  };
 
   const handleSave = () => {
     const userDocRef = doc(collection(db, 'users'), userId);
@@ -93,6 +123,17 @@ export const UserProfile = ({ userId }) => {
       uploadImageAsync(newProfileImage)
         .then((downloadURL) => {
           userData.profileImage = downloadURL;
+          return updateDoc(userDocRef, userData);
+        })
+        .then(() => {
+          console.log('User data updated!');
+          fetchUserData();
+        })
+        .catch((error) => console.log('Error updating user data!: ', error));
+    } else if (newBikeImage) {
+      uploadBikeImageAsync(newBikeImage)
+        .then((downloadURL) => {
+          userData.bikeImage = downloadURL;
           return updateDoc(userDocRef, userData);
         })
         .then(() => {
@@ -128,28 +169,67 @@ export const UserProfile = ({ userId }) => {
           style={styles.profileImage}
         />
       )}
-      <Button
-        title="Upload Profile Picture"
-        onPress={handleProfileImageUpload}
-        color="#ffc93c"
-      />
-      <TextInput
+
+      <Pressable
+        style={[styles.button, styles.buttonOpen]}
+        onPress={handleProfileImageUpload}>
+        <Text style={styles.textStyle}>Upload Profile Picture</Text>
+      </Pressable>
+       <TextInput
         value={newName}
         onChangeText={setNewName}
         placeholder="Name"
         style={styles.input}
-        color="#000"
-        backgroundColor="#fff"
+        color='#000'
+        backgroundColor='#fff'
       />
       <TextInput
         value={newLocation}
         onChangeText={setNewLocation}
         placeholder="Location"
         style={styles.input}
-        color="#000"
-        backgroundColor="#fff"
+        color='#000'
+        backgroundColor='#fff'
       />
-      <Button title="Save Changes" onPress={handleSave} color="#ffc93c" />
+
+      
+      
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+          {newBikeImage ? (
+        <Image source={{ uri: newBikeImage }} style={styles.profileImage} />
+      ) : (
+        <Image
+          source={{ uri: user.bikeImage }}
+          style={styles.bikeImage}
+        />
+      )}
+
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={handleCameraImageUpload}>
+              <Text style={styles.textStyle}>Take Bike Image</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Hide</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable>
+        <Text onPress={() => setModalVisible(true)} style={[styles.button, styles.buttonOpen, styles.textStyle]}>Show My Bike</Text>
+        <Text onPress={handleSave} style={[styles.button, styles.buttonOpen, styles.textStyle]}> Save Changes </Text>
+      </Pressable>
     </View>
   );
 };
@@ -160,6 +240,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#07689f',
+    
   },
   profileImage: {
     width: 200,
@@ -167,7 +248,15 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     marginBottom: 30,
     borderColor: '#fff',
-    borderWidth: 4,
+    borderWidth: 4, 
+  },
+  bikeImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 30,
+    borderColor: '#fff',
+    borderWidth: 4, 
   },
   input: {
     height: 40,
@@ -175,5 +264,42 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+  },
+  modalView: {
+    margin: 60,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 50,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 50,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 20,
+  },
+  buttonOpen: {
+    backgroundColor: '#ffc93c',
+    margin: 10,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+    margin: 5,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
