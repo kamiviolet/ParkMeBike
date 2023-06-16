@@ -12,7 +12,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { fetchParking } from '../utils/api';
 import ParkingLots from './ParkingLots';
 import ControlPanel from './ControlPanel';
-import MapViewDirections from 'react-native-maps-directions'
+import MapViewDirections from 'react-native-maps-directions';
 
 export default function Mapframe({
   locationParams,
@@ -24,12 +24,10 @@ export default function Mapframe({
   const [modalVisible, setModalVisible] = useState(false);
   const [destination, setDestination] = useState({
     latitude: null,
-    longitude: null
-  })
-  const [showRoute, setShowRoute] = useState(false)
-  const [showTraffic, setShowTraffic] = useState(false)
-  
-
+    longitude: null,
+  });
+  const [showRoute, setShowRoute] = useState(false);
+  const [showTraffic, setShowTraffic] = useState(false);
 
   useEffect(() => {
     fetchParking(locationParams, parkingLimit)
@@ -38,7 +36,6 @@ export default function Mapframe({
       })
       .catch((err) => console.log(err));
   }, [locationParams, parkingLimit]);
-
 
   if (locationParams.location != null) {
     return (
@@ -60,41 +57,43 @@ export default function Mapframe({
           loadingEnabled={true}
           showsTraffic={showTraffic}
           initialRegion={{
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
           initialCamera={{
-              latitude: locationParams.location.latitude,
-              longitude: locationParams.location.longitude,
-              latitudeDelta: 0.1,
-              longitudeDelta: 0.1
+            latitude: locationParams.location.latitude,
+            longitude: locationParams.location.longitude,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
           }}
         >
-          {
-                        pointsOfInterest.map(({properties, geometry}) => {
-                             return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination}/>
-                        })
-                    }
-                    <Marker
-                      coordinate={currLocation}
-                    />
-                    { 
-                      destination.latitude && showRoute
-                      ? <>
-                      <MapViewDirections 
-                      origin={currLocation}
-                      destination={destination}
-                      apikey='AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4'
-                      strokeWidth={4}
-                      strokeColor='#111111'
-                      mode='BICYCLE'
-                      onReady={(result)=>{}}
-                    /> 
-                      </>
-                      :
-                      <></>
-                    }
-                  
+          {pointsOfInterest.map(({ properties, geometry }) => {
+            return (
+              <ParkingLots
+                properties={properties}
+                geometry={geometry}
+                key={properties.id}
+                destination={destination}
+                setDestination={setDestination}
+              />
+            );
+          })}
+          <Marker coordinate={currLocation} />
+          {destination.latitude && showRoute ? (
+            <>
+              <MapViewDirections
+                origin={currLocation}
+                destination={destination}
+                apikey="AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4"
+                strokeWidth={4}
+                strokeColor="#111111"
+                mode="BICYCLE"
+                onReady={(result) => {}}
+              />
+            </>
+          ) : (
+            <></>
+          )}
         </MapView>
         <Modal
           animationType="slide"
@@ -120,8 +119,7 @@ export default function Mapframe({
         <Button
           onPress={() => setModalVisible(!modalVisible)}
           title="ControlPanel"
-        >
-        </Button>
+        ></Button>
       </View>
       // </SafeAreaView>
     );

@@ -1,10 +1,10 @@
 import {StyleSheet, View, Text, Pressable, Button} from 'react-native'
-import { Slider, Icon } from '@rneui/themed';
+import { Slider, Icon, CheckBox } from '@rneui/themed';
 import { color } from 'react-native-reanimated';
 
 
 
-const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParkingLimit, setModalVisible})=>{
+const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParkingLimit, setModalVisible, showTraffic, setShowTraffic, showRoute, setShowRoute})=>{
    
     return (
         <>
@@ -12,13 +12,13 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
         <Text style={styles.heading}>Radius</Text>
         <Slider 
         style={styles.radiusSlider} 
-        value={10}
+        value={locationParams.radius}
         maximumValue={100} 
         minimumValue={1}
         minimumTrackTintColor='#ffffff'
         maximumTrackTintColor='#000000'
         step={1}
-        allowTouchTrack
+        // allowTouchTrack
         trackStyle={{ height: 5, backgroundColor: 'transparent' }}
         thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
         thumbProps={{
@@ -40,7 +40,7 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
     <Text style={styles.heading}>Bike Parks</Text>
       <Slider
         style={styles.limitSlider} 
-        value={1}
+        value={parkingLimit}
         maximumValue={10} 
         minimumValue={1}
         minimumTrackTintColor='#ffffff'
@@ -65,6 +65,16 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
         }}
     />
     <Text style={styles.label}>{parkingLimit} bike parks</Text>
+    <CheckBox
+      title='show route'
+      checked={showRoute}
+      onPress={() => setShowRoute(!showRoute)}
+    />
+    <CheckBox
+      title='show traffic'
+      checked={showTraffic}
+      onPress={() => setShowTraffic(!showTraffic)}
+    />
     <Button title="close" onPress={()=>{setModalVisible(false)}}>Close</Button>
     </View>
     </>
@@ -73,23 +83,13 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
 
 const styles = StyleSheet.create({
     sliderWrapper: {
-        // position: 'absolute',
-        // paddingHorizontal: 20,
-        // top: 40,
-        // zIndex: 3,
-        // width: '100%',
-        // backgroundColor: '#000000c0',
-        // borderRadius: 20,   
-     
         position: 'absolute',
         paddingHorizontal: 20,
-        bottom: 50, 
+        top: 20,
         zIndex: 3,
         width: '100%',
-        height: 280, 
         backgroundColor: '#000000c0',
-        borderTopLeftRadius: 20, 
-        borderTopRightRadius: 20,    
+        borderRadius: 20,   
       },
       radiusSlider: {
         // position: 'relative',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         color: 'white'
       },
       heading: {
-        padding: 12,
+        padding: 10,
         color: 'white',
         fontSize: 20
       }

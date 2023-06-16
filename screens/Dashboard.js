@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';// Import Map and Marker
 import Mapframe from '../components/Mapframe';
 import * as Location from 'expo-location';
+import { LoadingIndicator } from '../components/LoadingIndicator';
 
 
 export default function Dashboard() {
@@ -27,7 +28,7 @@ export default function Dashboard() {
               distanceInterval: 10,
             },
             location => {
-             setCurrLocation(location)
+             setCurrLocation({latitude: location.coords.latitude, longitude: location.coords.longitude})
             })
       }
         })
@@ -48,7 +49,7 @@ export default function Dashboard() {
 
   if(isLoading){
     return(
-      <Text>Fetching cycleparking...</Text>
+      <LoadingIndicator/>
     )
   }
     return (
