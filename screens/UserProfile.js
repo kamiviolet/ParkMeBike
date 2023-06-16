@@ -1,35 +1,112 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import { collection, doc, getDoc } from 'firebase/firestore';
-
+import { View, Text, Image, StyleSheet, TextInput, Button } from 'react-native';
+import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import * as ImagePicker from 'expo-image-picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import uuid from 'uuid';
 import { db } from '../config';
+
+const uriToBlob = (uri) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+    xhr.onerror = function () {
+      reject(new TypeError('Network request failed!'));
+    };
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true);
+    xhr.send(null);
+  });
+};
+
+const uploadImageAsync = (uri) => {
+  return uriToBlob(uri).then((blob) => {
+    const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`);
+    return uploadBytes(fileRef, blob).then(() => {
+      blob.close();
+      return getDownloadURL(fileRef);
+    });
+  });
+};
 
 export const UserProfile = ({ userId }) => {
   const [user, setUser] = useState(null);
+  const [newName, setNewName] = useState('');
+  const [newLocation, setNewLocation] = useState('');
+  const [newProfileImage, setNewProfileImage] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = () => {
-      if (!userId) {
-        console.log('User ID is undefined');
-        return;
-      }
-      
-      const userDocRef = doc(collection(db, 'users'), userId);
-  
-      getDoc(userDocRef)
-        .then((userDocSnap) => {
-          if (userDocSnap.exists()) {
-            const userData = userDocSnap.data();
-            setUser(userData);
-          }
-        })
-        .catch((error) => {
-          console.log('Error fetching user data: ', error);
-        });
-    };
-  
     fetchUserData();
   }, [userId]);
+
+  const fetchUserData = () => {
+    if (!userId) {
+      console.log('User ID is undefined');
+      return;
+    }
+
+    const userDocRef = doc(collection(db, 'users'), userId);
+
+    getDoc(userDocRef)
+      .then((userDocSnap) => {
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setUser({
+            name: userData.name,
+            email: userData.email,
+            profileImage: userData.profileImage,
+            location: userData.location,
+            // other user stuff
+          });
+        }
+      })
+      .catch((error) => console.log('Error fetching user data!: ', error));
+  };
+
+  const handleProfileImageUpload = () => {
+    ImagePicker.requestMediaLibraryPermissionsAsync()
+      .then((permissionResult) => {
+        if (!permissionResult.granted) {
+          alert('Permission to access camera roll is required!');
+          return;
+        }
+
+        return ImagePicker.launchImageLibraryAsync();
+      })
+      .then((pickerResult) => {
+        if (pickerResult && !pickerResult.canceled) {
+          setNewProfileImage(pickerResult.assets[0].uri);
+        }
+      })
+      .catch((error) => console.log('Error during image selection!: ', error));
+  };
+
+  const handleSave = () => {
+    const userDocRef = doc(collection(db, 'users'), userId);
+    const userData = { name: newName, location: newLocation };
+
+    if (newProfileImage) {
+      uploadImageAsync(newProfileImage)
+        .then((downloadURL) => {
+          userData.profileImage = downloadURL;
+          return updateDoc(userDocRef, userData);
+        })
+        .then(() => {
+          console.log('User data updated!');
+          fetchUserData();
+        })
+        .catch((error) => console.log('Error updating user data!: ', error));
+    } else {
+      updateDoc(userDocRef, userData)
+        .then(() => {
+          console.log('User data updated!');
+          fetchUserData();
+        })
+        .catch((error) => console.log('Error updating user data!: ', error));
+    }
+  };
 
   if (!user) {
     return (
@@ -41,10 +118,36 @@ export const UserProfile = ({ userId }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: user.profileImage }} style={styles.profileImage} />
-      <Text style={styles.userName}>{user.name}</Text>
-      <Text style={styles.email}>{user.email}</Text>
-      {/* Display additional user information */}
+      {newProfileImage ? (
+        <Image source={{ uri: newProfileImage }} style={styles.profileImage} />
+      ) : (
+        <Image
+          source={{ uri: user.profileImage }}
+          style={styles.profileImage}
+        />
+      )}
+      <Button
+        title="Upload Profile Picture"
+        onPress={handleProfileImageUpload}
+        color="#ffc93c"
+      />
+      <TextInput
+        value={newName}
+        onChangeText={setNewName}
+        placeholder="Name"
+        style={styles.input}
+        color="#000"
+        backgroundColor="#fff"
+      />
+      <TextInput
+        value={newLocation}
+        onChangeText={setNewLocation}
+        placeholder="Location"
+        style={styles.input}
+        color="#000"
+        backgroundColor="#fff"
+      />
+      <Button title="Save Changes" onPress={handleSave} color="#ffc93c" />
     </View>
   );
 };
@@ -54,22 +157,21 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#07689f',
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    marginBottom: 30,
+    borderColor: '#fff',
+    borderWidth: 4,
   },
-  userName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  email: {
-    fontSize: 16,
-    color: 'gray',
-    marginBottom: 10,
+  input: {
+    height: 40,
+    width: 200,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
-

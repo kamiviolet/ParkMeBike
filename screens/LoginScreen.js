@@ -24,12 +24,11 @@ export const LoginScreen = ({ navigation }) => {
     const { email, password } = values;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        console.log(userCredentials)
+        console.log(userCredentials);
         return getUserDocument(userCredentials.user.uid);
       })
       .then((userDocument) => {
         //userDocument from firestore
-        
       })
       .catch((error) => setErrorState(error.message));
   };
@@ -123,9 +122,7 @@ export const LoginScreen = ({ navigation }) => {
 
       {/* App info footer */}
       <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          Expo Firebase Starter App (based on managed workflow)
-        </Text>
+        <Text style={styles.footerText}>Park your bike!</Text>
       </View>
     </>
   );
