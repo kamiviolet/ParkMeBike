@@ -12,6 +12,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { fetchParking } from '../utils/api';
 import ParkingLots from './ParkingLots';
 import ControlPanel from './ControlPanel';
+import MapViewDirections from 'react-native-maps-directions'
 
 export default function Mapframe({
   locationParams,
@@ -21,15 +22,23 @@ export default function Mapframe({
   const [pointsOfInterest, setPointsOfInterest] = useState([]);
   const [parkingLimit, setParkingLimit] = useState(3);
   const [modalVisible, setModalVisible] = useState(false);
+  const [destination, setDestination] = useState({
+    latitude: null,
+    longitude: null
+  })
+  const [showRoute, setShowRoute] = useState(false)
+  const [showTraffic, setShowTraffic] = useState(false)
+  
+
 
   useEffect(() => {
     fetchParking(locationParams, parkingLimit)
       .then(({ features }) => {
-        console.log(features[0].properties, 'features');
         setPointsOfInterest([...features]);
       })
       .catch((err) => console.log(err));
   }, [locationParams, parkingLimit]);
+
 
   if (locationParams.location != null) {
     return (
@@ -49,28 +58,43 @@ export default function Mapframe({
           showsUserLocation={true}
           showsMyLocationButton={true}
           loadingEnabled={true}
-          // toolbarEnabled={true}
-          showsTraffic={true}
-          // showsIndoors={true}
-          // initialRegion={{
-
-          //     // latitudeDelta: 0.0922,
-          //     // longitudeDelta: 0.0421,
-          //     latitudeDelta: 0.1,
-          //     longitudeDelta: 0.1
-          // }}
-          // initialCamera={{
-          //     latitude: locationParams.location.latitude,
-          //     longitude: locationParams.location.longitude,
-          //     latitudeDelta: 0.1,
-          //     longitudeDelta: 0.1
-          // }}
+          showsTraffic={showTraffic}
+          initialRegion={{
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+          }}
+          initialCamera={{
+              latitude: locationParams.location.latitude,
+              longitude: locationParams.location.longitude,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1
+          }}
         >
           {
-            // pointsOfInterest.map(({properties, geometry}) => {
-            //      return <ParkingLots properties={properties} geometry={geometry} key={properties.id} />
-            // })
-          }
+                        pointsOfInterest.map(({properties, geometry}) => {
+                             return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination}/>
+                        })
+                    }
+                    <Marker
+                      coordinate={currLocation}
+                    />
+                    { 
+                      destination.latitude && showRoute
+                      ? <>
+                      <MapViewDirections 
+                      origin={currLocation}
+                      destination={destination}
+                      apikey='AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4'
+                      strokeWidth={4}
+                      strokeColor='#111111'
+                      mode='BICYCLE'
+                      onReady={(result)=>{}}
+                    /> 
+                      </>
+                      :
+                      <></>
+                    }
+                  
         </MapView>
         <Modal
           animationType="slide"
@@ -87,12 +111,17 @@ export default function Mapframe({
             parkingLimit={parkingLimit}
             setParkingLimit={setParkingLimit}
             setModalVisible={setModalVisible}
+            showRoute={showRoute}
+            setShowRoute={setShowRoute}
+            showTraffic={showTraffic}
+            setShowTraffic={setShowTraffic}
           />
         </Modal>
         <Button
           onPress={() => setModalVisible(!modalVisible)}
           title="ControlPanel"
-        ></Button>
+        >
+        </Button>
       </View>
       // </SafeAreaView>
     );
