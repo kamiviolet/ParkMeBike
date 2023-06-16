@@ -7,7 +7,7 @@ const Stack = createStackNavigator();
 
 const HeaderTitle = () => (
   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-    <Ionicons name="bicycle" size={26} color="#fff" />
+    <Ionicons name="bicycle" size={28} color="#fff" />
     <Text
       style={{
         color: '#fff',
@@ -31,7 +31,7 @@ export const AppStack = () => {
           headerTitle: (props) => <HeaderTitle {...props} />,
           headerStyle: {
             backgroundColor: '#000000',
-            height: 70,
+            height: 80,
           },
           headerTintColor: '#fff',
         }}

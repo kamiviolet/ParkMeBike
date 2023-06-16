@@ -6,6 +6,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import uuid from 'uuid';
 import { db } from '../config';
 
+import { signOut } from 'firebase/auth';
+
 const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => { //returns a promise that resolves with blob object, make http requests in js
     const xhr = new XMLHttpRequest();

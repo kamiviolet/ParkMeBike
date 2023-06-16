@@ -73,13 +73,23 @@ const ControlPanel = ({setLocationParams, locationParams, parkingLimit, setParki
 
 const styles = StyleSheet.create({
     sliderWrapper: {
+        // position: 'absolute',
+        // paddingHorizontal: 20,
+        // top: 40,
+        // zIndex: 3,
+        // width: '100%',
+        // backgroundColor: '#000000c0',
+        // borderRadius: 20,   
+     
         position: 'absolute',
         paddingHorizontal: 20,
-        top: 20,
+        bottom: 50, 
         zIndex: 3,
         width: '100%',
+        height: 280, 
         backgroundColor: '#000000c0',
-        borderRadius: 20,   
+        borderTopLeftRadius: 20, 
+        borderTopRightRadius: 20,    
       },
       radiusSlider: {
         // position: 'relative',
@@ -97,7 +107,7 @@ const styles = StyleSheet.create({
         color: 'white'
       },
       heading: {
-        padding: 10,
+        padding: 12,
         color: 'white',
         fontSize: 20
       }

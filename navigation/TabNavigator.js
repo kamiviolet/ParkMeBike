@@ -21,23 +21,23 @@ const UserProfileWithAuth = () => {
 
 const TabNavigator = () => (
   <Tab.Navigator
-    initialRouteName="Home"
+    initialRouteName="Dashboard"
     screenOptions={({ route }) => ({
       headerShown: false,
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
 
-        if (route.name === 'Home') {
+        if (route.name === 'Cool stuff') {
           iconName = focused
             ? 'information-circle'
             : 'information-circle-outline';
         } else if (route.name === 'UserProfile') {
           iconName = focused ? 'list' : 'list-outline';
         } else if (route.name === 'Dashboard') {
-            iconName = focused ? 'map' : 'map-outline';
-          } else if (route.name === 'Settings') { 
-            iconName = focused ? 'settings' : 'settings-outline';
-          }
+          iconName = focused ? 'map' : 'map-outline';
+        } else if (route.name === 'Settings') {
+          iconName = focused ? 'settings' : 'settings-outline';
+        }
 
         return <Ionicons name={iconName} size={size} color={color} />;
       },
@@ -57,9 +57,9 @@ const TabNavigator = () => (
       },
     })}
   >
-    <Tab.Screen name="Home" component={HomeScreen} />
-    <Tab.Screen name="UserProfile" component={UserProfileWithAuth} />
     <Tab.Screen name="Dashboard" component={Dashboard} />
+    <Tab.Screen name="UserProfile" component={UserProfileWithAuth} />
+    <Tab.Screen name="Cool stuff" component={HomeScreen} />
     <Tab.Screen name="Settings" component={SettingsScreen} />
   </Tab.Navigator>
 );
