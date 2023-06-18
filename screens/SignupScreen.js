@@ -24,7 +24,7 @@ export const SignupScreen = ({ navigation }) => {
   } = useTogglePasswordVisibility();
 
   const handleSignup = (values) => {
-    const { email, password } = values;
+    const { username, email, password } = values;
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -33,7 +33,8 @@ export const SignupScreen = ({ navigation }) => {
 
         // Add user details to Firestore
         const userDocRef = doc(db, 'users', uid);
-        return setDoc(userDocRef, {
+        return addDoc(userDocRef, {
+          username,
           email,
           // more fields put here, like firstName, lastName, etc.
         })
@@ -64,6 +65,7 @@ export const SignupScreen = ({ navigation }) => {
         {/* Formik Wrapper */}
         <Formik
           initialValues={{
+            username: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -81,6 +83,22 @@ export const SignupScreen = ({ navigation }) => {
           }) => (
             <>
               {/* Input fields */}
+              <TextInput
+                name="username"
+                leftIconName="account"
+                placeholder="Enter username"
+                autoCapitalize="none"
+                keyboardType="default"
+                textContentType="username"
+                autoFocus={true}
+                value={values.username}
+                onChangeText={handleChange('username')}
+                onBlur={handleBlur('username')}
+              />
+              <FormErrorMessage
+                error={errors.username}
+                visible={touched.username}
+              />
               <TextInput
                 name="email"
                 leftIconName="email"
@@ -156,16 +174,16 @@ export const SignupScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.black,
     paddingHorizontal: 12,
   },
-  logoContainer: {
+  innerContainer: {
     alignItems: 'center',
   },
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: Colors.black,
+    color: Colors.white,
     paddingTop: 20,
   },
   button: {
@@ -173,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    backgroundColor: Colors.orange,
+    backgroundColor: Colors.grey,
     padding: 10,
     borderRadius: 8,
   },
@@ -186,5 +204,19 @@ const styles = StyleSheet.create({
     marginTop: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+  },
+  footer: {
+    backgroundColor: Colors.black,
+    paddingHorizontal: 12,
+    paddingBottom: 48,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.white,
   },
 });

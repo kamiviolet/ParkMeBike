@@ -9,7 +9,8 @@ import { db } from '../config';
 import { signOut } from 'firebase/auth';
 
 const uriToBlob = (uri) => {
-  return new Promise((resolve, reject) => { //returns a promise that resolves with blob object, make http requests in js
+  return new Promise((resolve, reject) => {
+    //returns a promise that resolves with blob object, make http requests in js
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
       resolve(xhr.response);
@@ -17,16 +18,18 @@ const uriToBlob = (uri) => {
     xhr.onerror = function () {
       reject(new TypeError('Network request failed!'));
     };
-    xhr.responseType = 'blob'; 
-    xhr.open('GET', uri, true); // 
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true); //
     xhr.send(null); //set to null GET requests don't have body
   });
 };
 
 const uploadImageAsync = (uri) => {
-  return uriToBlob(uri).then((blob) => { //calls blob passes uri to it
+  return uriToBlob(uri).then((blob) => {
+    //calls blob passes uri to it
     const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`);
-    return uploadBytes(fileRef, blob).then(() => { //when blob is ready, uploads to firebase storage
+    return uploadBytes(fileRef, blob).then(() => {
+      //when blob is ready, uploads to firebase storage
       blob.close(); //frees up memory
       return getDownloadURL(fileRef); //gets download url of image
     });
@@ -38,6 +41,7 @@ export const UserProfile = ({ userId }) => {
   const [newName, setNewName] = useState('');
   const [newLocation, setNewLocation] = useState('');
   const [newProfileImage, setNewProfileImage] = useState(null);
+
 
   useEffect(() => {
     fetchUserData();
@@ -56,7 +60,7 @@ export const UserProfile = ({ userId }) => {
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
           setUser({
-            name: userData.name,
+            username: userData.username,
             email: userData.email,
             profileImage: userData.profileImage,
             location: userData.location,
@@ -85,9 +89,11 @@ export const UserProfile = ({ userId }) => {
       .catch((error) => console.log('Error during image selection!: ', error));
   };
 
+
+
   const handleSave = () => {
     const userDocRef = doc(collection(db, 'users'), userId);
-    const userData = { name: newName, location: newLocation };
+    const userData = { username: newUsername, location: newLocation };
 
     if (newProfileImage) {
       uploadImageAsync(newProfileImage)
@@ -117,9 +123,11 @@ export const UserProfile = ({ userId }) => {
       </View>
     );
   }
+  
 
   return (
     <View style={styles.container}>
+      <Text style={styles.screenTitle}>Profile</Text>
       {newProfileImage ? (
         <Image source={{ uri: newProfileImage }} style={styles.profileImage} />
       ) : (
@@ -133,18 +141,29 @@ export const UserProfile = ({ userId }) => {
         onPress={handleProfileImageUpload}
         color="#ffc93c"
       />
+      <Text style={styles.label}>Username</Text>
       <TextInput
-        value={newName}
-        onChangeText={setNewName}
-        placeholder="Name"
+        value={newUsername}
+        onChangeText={setNewUsername}
+        placeholder={user.username}
         style={styles.input}
         color="#000"
         backgroundColor="#fff"
       />
+      <Text style={styles.label}>Email</Text>
+      <TextInput
+        editable={false}
+        value={user.email}
+        style={styles.input}
+        color="#000"
+        backgroundColor="#fff"
+      />
+      <Button title="Edit Email" onPress={() => navigation.navigate('ChangeEmail')} color="#ffc93c" />
+      <Text style={styles.label}>Location</Text>
       <TextInput
         value={newLocation}
         onChangeText={setNewLocation}
-        placeholder="Location"
+        placeholder={user.location}
         style={styles.input}
         color="#000"
         backgroundColor="#fff"
@@ -160,14 +179,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#07689f',
-  },
-  profileImage: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    marginBottom: 30,
-    borderColor: '#fff',
-    borderWidth: 4,
   },
   input: {
     height: 40,
