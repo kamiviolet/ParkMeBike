@@ -59,21 +59,21 @@ export default function Mapframe({
           showsMyLocationButton={true}
           loadingEnabled={true}
           showsTraffic={showTraffic}
-          initialRegion={{
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-          }}
-          initialCamera={{
-              latitude: locationParams.location.latitude,
-              longitude: locationParams.location.longitude,
-              latitudeDelta: 0.1,
-              longitudeDelta: 0.1
-          }}
+          // initialRegion={{
+          //     latitudeDelta: 0.0922,
+          //     longitudeDelta: 0.0421,
+          // }}
+          // initialCamera={{
+          //     latitude: locationParams.location.latitude,
+          //     longitude: locationParams.location.longitude,
+          //     latitudeDelta: 0.1,
+          //     longitudeDelta: 0.1
+          // }}
         >
           {
-                        pointsOfInterest.map(({properties, geometry}) => {
-                             return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination}/>
-                        })
+                        // pointsOfInterest.map(({properties, geometry}) => {
+                        //      return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination}/>
+                        // })
                     }
                     <Marker
                       coordinate={currLocation}
