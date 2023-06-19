@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 380,
     backgroundColor: '#000000c0',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
   },
   radiusSlider: {
     // position: 'relative',
