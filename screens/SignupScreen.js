@@ -13,6 +13,7 @@ import { collection, doc, setDoc } from 'firebase/firestore';
 
 export const SignupScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
+  const [username, setUsername] = useState(''); 
 
   const {
     passwordVisibility,
@@ -65,7 +66,7 @@ export const SignupScreen = ({ navigation }) => {
       <KeyboardAwareScrollView enableOnAndroid={true}>
         {/* LogoContainer: consits app logo and screen title */}
         <View style={styles.logoContainer}>
-          <Logo uri={Images.logo} />
+         
           <Text style={styles.screenTitle}>Create a new account!</Text>
         </View>
         {/* Formik Wrapper */}
@@ -180,8 +181,9 @@ export const SignupScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.black,
+    backgroundColor: '#0c797d',
     paddingHorizontal: 12,
+    paddingTop: '50%',
   },
   innerContainer: {
     alignItems: 'center',

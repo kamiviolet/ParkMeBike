@@ -121,27 +121,26 @@ export const LoginScreen = ({ navigation }) => {
             )}
           </Formik>
           {/* Button to navigate to SignupScreen to create a new account */}
-          <View style={styles.borderlessButtonContainer}>
-            <Pressable onPress={() => navigation.navigate('Signup')}>
-              <Text style={[styles.buttonText, { fontSize: 16 }]}>
-                Create a new account
-              </Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.borderlessButtonContainer}>
-            <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text style={[styles.buttonText, { fontSize: 16 }]}>
-                Forgot Password
-              </Text>
-            </Pressable>
-          </View>
+          <Button
+            style={styles.borderlessButtonContainer}
+            borderless
+            title={'Create a new account?'}
+            onPress={() => navigation.navigate('Signup')}
+          />
+          <Button
+            style={styles.borderlessButtonContainer}
+            borderless
+            title={'Forgot Password'}
+            onPress={() => navigation.navigate('ForgotPassword')}
+          />
         </KeyboardAwareScrollView>
       </View>
 
       {/* App info footer */}
       <View style={styles.footer}>
-        <Text style={styles.footerText}></Text>
+        <Text style={styles.footerText}>
+          
+        </Text>
       </View>
     </>
   );
