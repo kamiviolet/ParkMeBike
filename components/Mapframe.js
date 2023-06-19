@@ -79,7 +79,7 @@ export default function Mapframe({
                       coordinate={currLocation}
                     />
                     { 
-                      destination.latitude && showRoute
+                        showRoute && destination.latitude
                       ? <>
                       <MapViewDirections 
                       origin={currLocation}

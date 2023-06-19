@@ -35,11 +35,11 @@ export default function ParkingLots({properties, geometry, destination, setDesti
                     : AIRPOLLUTIONMARKER.bad
                 }
                 onPress={(e)=>{setDestination(e.nativeEvent.coordinate)}}
-                onCalloutPress={()=>console.log('bob')}
+                onCalloutPress={()=>console.log(geometry.coordinates)}
                 
             >
-            <Callout>
-            <CalloutSubview style={{width: 20, height: 20}} onPress={()=>{console.log('bob')}}><Text>yo</Text></CalloutSubview>
+            <Callout onPress={()=>{console.log(geometry.coordinates)}}>
+            <Text>Park Here</Text>
             <View>
             {
                 Platform.OS === 'ios' 
