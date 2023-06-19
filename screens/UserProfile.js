@@ -8,14 +8,25 @@ import {
   Button,
   Pressable,
   Modal,
+  Alert,
 } from 'react-native';
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import uuid from 'uuid';
 import { db } from '../config';
-
+import { auth } from '../config';
 import { signOut } from 'firebase/auth';
+
+const DeleteUserProfile = ({ onPress }) => (
+  <Button title="Delete Profile" onPress={onPress} color="red" />
+);
 
 const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
@@ -83,7 +94,6 @@ export const UserProfile = ({ userId }) => {
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
           setUser({
-            
             username: userData.username,
             email: userData.email,
             profileImage: userData.profileImage,
@@ -103,7 +113,6 @@ export const UserProfile = ({ userId }) => {
           alert('Permission to access camera roll is required!');
           return;
         }
-
         return ImagePicker.launchImageLibraryAsync();
       })
       .then((pickerResult) => {
@@ -121,7 +130,7 @@ export const UserProfile = ({ userId }) => {
           alert('Permission to access camera is required!');
           return;
         }
-  
+
         ImagePicker.launchCameraAsync()
           .then((pickerResult) => {
             if (pickerResult && !pickerResult.canceled) {
@@ -132,7 +141,9 @@ export const UserProfile = ({ userId }) => {
             console.log('Error during the picture capture: ', error)
           );
       })
-      .catch((error) => console.log('Error requesting camera permissions!: ', error));
+      .catch((error) =>
+        console.log('Error requesting camera permissions!: ', error)
+      );
   };
 
   const handleSave = () => {
@@ -170,6 +181,58 @@ export const UserProfile = ({ userId }) => {
         .catch((error) => console.log('Error updating user data!: ', error));
     }
   };
+  const handleDeleteProfile = async () => {
+    const userDocRef = doc(collection(db, 'users'), userId);
+    try {
+      (await deleteDoc(userDocRef)) && (await auth.currentUser.delete());
+      if (user?.profileImage) {
+        const fileRef = ref(getStorage(), user.profileImage);
+        await deleteObject(fileRef);
+      }
+      auth.signOut();
+      navigation.replace('Login');
+    } catch (error) {
+      console.log('error deleting your profile');
+    }
+  };
+  // const deleteAccount = async () => {
+  //   try {
+  //     await auth.currentUser.delete();
+  //     console.log("deleted");
+  //   } catch (error) {
+  //     console.log("not deleted");
+  //   }
+  // };
+
+  const deleteAccount = async () => {
+    try {
+      const confrimDeletion = await new Promise((resolve) => {
+        Alert.alert(
+          'Delete Account',
+          'Are you sure you want to delete your account?',
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+              onPress: () => resolve(false),
+            },
+            {
+              text: 'yes',
+              style: 'destructive',
+              onPress: () => resolve(true),
+            },
+          ],
+          { cancelable: false }
+        );
+      });
+      if (confrimDeletion) {
+        await auth.currentUser.delete();
+      }
+      console.log('deleted');
+    } catch (error) {
+      console.log('not deleted');
+    }
+  };
 
   if (!user) {
     return (
@@ -184,14 +247,22 @@ export const UserProfile = ({ userId }) => {
       {newProfileImage ? (
         <Image source={{ uri: newProfileImage }} style={styles.profileImage} />
       ) : user && user.profileImage ? (
-        <Image source={{ uri: user.profileImage }} style={styles.profileImage} />
+        <Image
+          source={{ uri: user.profileImage }}
+          style={styles.profileImage}
+        />
       ) : (
-        <Image source={require('../assets/profile-placeholder.png')} style={styles.profileImage} />
+        <Image
+          source={require('../assets/profile-placeholder.png')}
+          style={styles.profileImage}
+        />
       )}
- 
-      <Text style={styles.usernameStyle}>{user.username}</Text> 
 
-      <Text style={styles.textStyle} onPress={handleProfileImageUpload}>Upload Profile Picture</Text>
+      <Text style={styles.usernameStyle}>{user.username}</Text>
+
+      <Text style={styles.textStyle} onPress={handleProfileImageUpload}>
+        Upload Profile Picture
+      </Text>
 
       <TextInput
         value={user.email}
@@ -210,8 +281,8 @@ export const UserProfile = ({ userId }) => {
         color="#000"
         backgroundColor="#fff"
       />
-
-<Modal
+      <DeleteUserProfile title="Delete" onPress={deleteAccount} color="red" />
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -234,16 +305,27 @@ export const UserProfile = ({ userId }) => {
               />
             )}
 
-            <Text style={styles.textStyle} onPress={handleCameraImageUpload}>Take Bike Image</Text>
+            <Text style={styles.textStyle} onPress={handleCameraImageUpload}>
+              Take Bike Image
+            </Text>
 
-            <Text style={styles.textStyle} onPress={() => setModalVisible(!modalVisible)}>Close</Text>
+            <Text
+              style={styles.textStyle}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              Close
+            </Text>
           </View>
         </View>
       </Modal>
 
-      <Text style={styles.textStyle} onPress={() => setModalVisible(true)}>Take Bike Image</Text>
+      <Text style={styles.textStyle} onPress={() => setModalVisible(true)}>
+        Take Bike Image
+      </Text>
 
-      <Text style={styles.textStyle} onPress={handleSave}>Save Changes</Text>
+      <Text style={styles.textStyle} onPress={handleSave}>
+        Save Changes
+      </Text>
     </View>
   );
 };
@@ -261,7 +343,7 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     marginBottom: 30,
     borderColor: '#fff',
-    borderWidth: 3, 
+    borderWidth: 3,
   },
   usernameStyle: {
     color: '#FFF',
@@ -272,7 +354,7 @@ const styles = StyleSheet.create({
     color: '#2196f3',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 18, 
+    fontSize: 18,
     padding: 10,
   },
   bikeImage: {
