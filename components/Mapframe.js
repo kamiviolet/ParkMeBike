@@ -7,12 +7,14 @@ import {
   Pressable,
   Modal,
   Button,
+  Dimensions
 } from 'react-native'; // Import Map and Marker
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { fetchParking } from '../utils/api';
 import ParkingLots from './ParkingLots';
 import ControlPanel from './ControlPanel';
 import MapViewDirections from 'react-native-maps-directions'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default function Mapframe({
   locationParams,
@@ -87,7 +89,7 @@ export default function Mapframe({
                       apikey='AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4'
                       strokeWidth={4}
                       strokeColor='#111111'
-                      mode='BICYCLE'
+                      mode='BICYCLING'
                       onReady={(result)=>{}}
                     /> 
                       </>
@@ -117,11 +119,11 @@ export default function Mapframe({
             setShowTraffic={setShowTraffic}
           />
         </Modal>
-        <Button
+        <Pressable style={styles.controlButton}
           onPress={() => setModalVisible(!modalVisible)}
-          title="ControlPanel"
         >
-        </Button>
+        <Icon size={35} name={'sliders'} style={styles.iconStyle}/>
+        </Pressable>
       </View>
       // </SafeAreaView>
     );
@@ -142,4 +144,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: -1,
   },
+  controlButton: {
+    position: 'absolute',
+    bottom: 80,
+    right: 0,
+    margin: 15,
+    zIndex: 5,
+    padding: 10,
+    backgroundColor: '#2D8CFF',
+    borderRadius: Dimensions.get('window').width * 0.5,
+  },
+  iconStyle: {
+    color: '#ffffff'
+  }
 });
