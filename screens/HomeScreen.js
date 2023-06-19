@@ -1,43 +1,25 @@
 import React from 'react';
-import { View, StyleSheet, Button, Text, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { signOut } from 'firebase/auth';
-// import { useNavigation } from '@react-navigation/native';
-
 import { auth } from '../config';
 
-// import Pressable from './Pressable';
-
-export const HomeScreen = () => {
-  // const navigation = useNavigation();
-
+export const HomeScreen = ({ navigation }) => {
   const handleLogout = () => {
     signOut(auth).catch((error) => console.log('Error logging out: ', error));
   };
 
-  // const handlePressProfile = () => {
-  //   navigation.navigate('UserProfile');
-  // };
-
-  // const handlePressDashboard = () => {
-
-  //   navigation.navigate('Dashboard');
-  // };
+  const goToHistoryScreen = () => {
+    navigation.navigate('ParkingHistory');
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.page}>
-        <Text style={styles.title}>Welcome to Park Me Bike!</Text>
-        <View style={styles.userProfile}>
-          <Image
-            source={require('../assets/profile.png')}
-            style={styles.userProfileImage}
-          />
-          <Text style={styles.userName}>Park Me Bike User</Text>
-        </View>
-      </View>
-      <View style={styles.signOutButton}>
-        <Button title="Sign Out" onPress={handleLogout} color="#ffc93c" />
-      </View>
+      <TouchableOpacity style={styles.button} onPress={goToHistoryScreen}>
+        <Text style={styles.buttonText}>History</Text>
+      </TouchableOpacity>
+      <Text style={styles.textStyle} onPress={handleLogout}>
+        Sign Out
+      </Text>
     </View>
   );
 };
@@ -45,36 +27,30 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#07689f',
-  },
-  page: {
-    flex: 1,
+    backgroundColor: '#555',
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 70,
   },
-  title: {
-    fontSize: 28,
-    color: '#fff',
-    marginBottom: 80,
-  },
-  userProfile: {
-    alignItems: 'center',
-  },
-  userProfileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+  button: {
+    backgroundColor: '#2196f3',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     marginBottom: 10,
   },
-  userName: {
-    fontSize: 20,
+  buttonText: {
     color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
   },
-  signOutButton: {
+  textStyle: {
+    color: '#2196f3',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 30,
     position: 'absolute',
     bottom: 20,
-    alignSelf: 'center',
-    width: 200,
   },
 });
+
+export default HomeScreen;

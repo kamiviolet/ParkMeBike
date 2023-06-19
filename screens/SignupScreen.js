@@ -25,28 +25,34 @@ export const SignupScreen = ({ navigation }) => {
 
   const handleSignup = (values) => {
     const { username, email, password } = values;
-
+  
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const { user } = userCredential;
         const { uid, email } = user;
-
+  
         // Add user details to Firestore
         const userDocRef = doc(db, 'users', uid);
-        return addDoc(userDocRef, {
+        setDoc(userDocRef, {
           username,
           email,
-          // more fields put here, like firstName, lastName, etc.
         })
           .then(() => {
             // User data added to Firestore successfully
             console.log('User added to Firestore');
+            return db.collection('users').doc(uid).get();
+          })
+          .then((doc) => {
+            if (doc.exists) {
+              const data = doc.data();
+              console.log("User data:", data);
+              setUsername(data.username); //get user document and then sets the username state with it.
+            } else {
+              console.log("No such user");
+            }
           })
           .catch((error) => {
-            console.log(
-              'Something went wrong with adding user to Firestore:',
-              error
-            );
+            console.log('Something went wrong with adding user to Firestore or retrieving data:', error);
           });
       })
       .catch((error) => {

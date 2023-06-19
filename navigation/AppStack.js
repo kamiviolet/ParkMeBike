@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigator from './TabNavigator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text } from 'react-native';
+import { ParkingHistory } from '../screens';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,18 @@ export const AppStack = () => {
         component={TabNavigator}
         options={{
           headerTitle: (props) => <HeaderTitle {...props} />,
+          headerStyle: {
+            backgroundColor: '#000000',
+            height: 80,
+          },
+          headerTintColor: '#fff',
+        }}
+      />
+      <Stack.Screen
+        name="ParkingHistory"
+        component={ParkingHistory}
+        options={{
+          title: 'Parking History',
           headerStyle: {
             backgroundColor: '#000000',
             height: 80,

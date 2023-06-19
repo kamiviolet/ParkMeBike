@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TextInput, Button } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TextInput,
+  Button,
+  Pressable,
+  Modal,
+} from 'react-native';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -27,11 +36,24 @@ const uriToBlob = (uri) => {
 const uploadImageAsync = (uri) => {
   return uriToBlob(uri).then((blob) => {
     //calls blob passes uri to it
-    const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`);
+    const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`); // uuid generates random unique id for the image
     return uploadBytes(fileRef, blob).then(() => {
       //when blob is ready, uploads to firebase storage
       blob.close(); //frees up memory
       return getDownloadURL(fileRef); //gets download url of image
+    });
+  });
+};
+//same as above with the bike image
+const uploadBikeImageAsync = (uri) => {
+  return uriToBlob(uri).then((blob) => {
+    const fileRef = ref(
+      getStorage(),
+      `bikeImages/9d14d199-178a-412f-b978-41d741db901c`
+    ); // uuid generates random unique id for the image
+    return uploadBytes(fileRef, blob).then(() => {
+      blob.close();
+      return getDownloadURL(fileRef);
     });
   });
 };
@@ -41,7 +63,8 @@ export const UserProfile = ({ userId }) => {
   const [newName, setNewName] = useState('');
   const [newLocation, setNewLocation] = useState('');
   const [newProfileImage, setNewProfileImage] = useState(null);
-
+  const [newBikeImage, setNewBikeImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -60,10 +83,12 @@ export const UserProfile = ({ userId }) => {
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
           setUser({
+            
             username: userData.username,
             email: userData.email,
             profileImage: userData.profileImage,
             location: userData.location,
+            bikeImage: userData.bikeImage,
             // other user stuff
           });
         }
@@ -88,17 +113,47 @@ export const UserProfile = ({ userId }) => {
       })
       .catch((error) => console.log('Error during image selection!: ', error));
   };
-
-
+  //asking permission to open camera
+  const handleCameraImageUpload = () => {
+    ImagePicker.requestCameraPermissionsAsync()
+      .then((permissionResult) => {
+        if (!permissionResult.granted) {
+          alert('Permission to access camera is required!');
+          return;
+        }
+  
+        ImagePicker.launchCameraAsync()
+          .then((pickerResult) => {
+            if (pickerResult && !pickerResult.canceled) {
+              setNewBikeImage(pickerResult.assets[0].uri);
+            }
+          })
+          .catch((error) =>
+            console.log('Error during the picture capture: ', error)
+          );
+      })
+      .catch((error) => console.log('Error requesting camera permissions!: ', error));
+  };
 
   const handleSave = () => {
     const userDocRef = doc(collection(db, 'users'), userId);
-    const userData = { username: newUsername, location: newLocation };
+    const userData = { location: newLocation };
 
     if (newProfileImage) {
       uploadImageAsync(newProfileImage)
         .then((downloadURL) => {
           userData.profileImage = downloadURL;
+          return updateDoc(userDocRef, userData);
+        })
+        .then(() => {
+          console.log('User data updated!');
+          fetchUserData();
+        })
+        .catch((error) => console.log('Error updating user data!: ', error));
+    } else if (newBikeImage) {
+      uploadBikeImageAsync(newBikeImage)
+        .then((downloadURL) => {
+          userData.bikeImage = downloadURL;
           return updateDoc(userDocRef, userData);
         })
         .then(() => {
@@ -123,52 +178,72 @@ export const UserProfile = ({ userId }) => {
       </View>
     );
   }
-  
 
   return (
     <View style={styles.container}>
-      <Text style={styles.screenTitle}>Profile</Text>
       {newProfileImage ? (
         <Image source={{ uri: newProfileImage }} style={styles.profileImage} />
+      ) : user && user.profileImage ? (
+        <Image source={{ uri: user.profileImage }} style={styles.profileImage} />
       ) : (
-        <Image
-          source={{ uri: user.profileImage }}
-          style={styles.profileImage}
-        />
+        <Image source={require('../assets/profile-placeholder.png')} style={styles.profileImage} />
       )}
-      <Button
-        title="Upload Profile Picture"
-        onPress={handleProfileImageUpload}
-        color="#ffc93c"
-      />
-      <Text style={styles.label}>Username</Text>
+ 
+      <Text style={styles.usernameStyle}>{user.username}</Text> 
+
+      <Text style={styles.textStyle} onPress={handleProfileImageUpload}>Upload Profile Picture</Text>
+
       <TextInput
-        value={newUsername}
-        onChangeText={setNewUsername}
-        placeholder={user.username}
-        style={styles.input}
-        color="#000"
-        backgroundColor="#fff"
-      />
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        editable={false}
         value={user.email}
+        editable={false}
+        placeholder="Email"
         style={styles.input}
         color="#000"
         backgroundColor="#fff"
       />
-      <Button title="Edit Email" onPress={() => navigation.navigate('ChangeEmail')} color="#ffc93c" />
-      <Text style={styles.label}>Location</Text>
+
       <TextInput
         value={newLocation}
         onChangeText={setNewLocation}
-        placeholder={user.location}
+        placeholder="Location"
         style={styles.input}
         color="#000"
         backgroundColor="#fff"
       />
-      <Button title="Save Changes" onPress={handleSave} color="#ffc93c" />
+
+<Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            {newBikeImage ? (
+              <Image
+                source={{ uri: newBikeImage }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <Image
+                source={{ uri: user.bikeImage }}
+                style={styles.bikeImage}
+              />
+            )}
+
+            <Text style={styles.textStyle} onPress={handleCameraImageUpload}>Take Bike Image</Text>
+
+            <Text style={styles.textStyle} onPress={() => setModalVisible(!modalVisible)}>Close</Text>
+          </View>
+        </View>
+      </Modal>
+
+      <Text style={styles.textStyle} onPress={() => setModalVisible(true)}>Take Bike Image</Text>
+
+      <Text style={styles.textStyle} onPress={handleSave}>Save Changes</Text>
     </View>
   );
 };
@@ -176,9 +251,33 @@ export const UserProfile = ({ userId }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#555',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#07689f',
+  },
+  profileImage: {
+    width: 125,
+    height: 125,
+    borderRadius: 75,
+    marginBottom: 30,
+    borderColor: '#fff',
+    borderWidth: 3, 
+  },
+  usernameStyle: {
+    color: '#FFF',
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  textStyle: {
+    color: '#2196f3',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 18, 
+    padding: 10,
+  },
+  bikeImage: {
+    width: 200,
+    height: 200,
   },
   input: {
     height: 40,
@@ -186,5 +285,29 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    color: '#000',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });

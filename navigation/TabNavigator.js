@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { useContext } from 'react';
 import { AuthenticatedUserContext } from '../providers';
+import ParkingHistory from '../screens/ParkingHistory';
 
 const Tab = createBottomTabNavigator();
 
