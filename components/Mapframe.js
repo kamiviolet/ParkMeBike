@@ -97,7 +97,7 @@ export default function Mapframe({
         >
           {
             pointsOfInterest.map(({properties, geometry}) => {
-                return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked}/>
+                return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} isParked={isParked}setIsParked={setIsParked}/>
             })
           }
           

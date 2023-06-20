@@ -25,6 +25,7 @@ export default function ParkingLots({
   geometry,
   destination,
   setDestination,
+  isParked,
   setIsParked
 }) {
   const [showPollution, setShowPollution] = useState(null);
@@ -44,8 +45,12 @@ export default function ParkingLots({
   }, [geometry]);
 
   const saveGeoLocation = () => {
+
+
     const uid = auth.currentUser.uid;
     const userBikeGeoRef = doc(db, "users", uid, "bikeGeo", "bikeLocation");
+
+    if(!isParked.parked){
     setDoc(userBikeGeoRef, {
       latitude: geometry.coordinates[1],
       longitude: geometry.coordinates[0],
@@ -62,6 +67,14 @@ export default function ParkingLots({
       .catch((error) => {
         console.log("Error saving parking spot:", error);
       });
+    } else {
+      setIsParked({
+        latitude: null,
+        longitude: null,
+        parked: false
+      });
+      console.log("you got your bike back!");
+    }
   };
 
   return (
@@ -82,11 +95,10 @@ export default function ParkingLots({
         onPress={(e) => {
           setDestination(e.nativeEvent.coordinate);
         }}
-        onCalloutPress={() => {
-          console.log(geometry.coordinates);
-
-          saveGeoLocation();
-        }}
+        // onCalloutPress={() => {
+        //   console.log(geometry.coordinates);
+        //   saveGeoLocation();
+        // }}
       >
         <Callout
           onPress={() => {
@@ -94,7 +106,11 @@ export default function ParkingLots({
             saveGeoLocation();
           }}
         >
-          <Text>Park Here</Text>
+          { (isParked.parked === true && isParked.longitude === geometry.coordinates[0] )
+          ? <Text>Get My Bike</Text>
+          : <Text>Park Here</Text> 
+          }
+          
           <View>
             {Platform.OS === "ios" ? (
               <Image
