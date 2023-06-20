@@ -1,4 +1,4 @@
-import { Marker, Callout, CalloutSubview } from "react-native-maps";
+import { Marker, Callout, CalloutSubview } from 'react-native-maps';
 import {
   StyleSheet,
   Text,
@@ -7,32 +7,28 @@ import {
   Platform,
   Button,
   Toast,
-} from "react-native"; // Import Map and Marker
-import { WebView } from "react-native-webview";
-import { useState, useEffect } from "react";
-import { fetchPollution } from "../utils/api";
-import { auth, db } from "../config";
-import { setDoc, doc, serverTimestamp } from "@firebase/firestore";
-
-const docRef = doc(db, "test", "dummy");
-
-setDoc(docRef, { test: "Hey" }).catch((error) => {
-  console.log("error getting doc:", error);
-});
+} from 'react-native'; // Import Map and Marker
+import { WebView } from 'react-native-webview';
+import { useState, useEffect } from 'react';
+import { fetchPollution } from '../utils/api';
+import { auth, db, collection, addDoc, setDoc, doc } from '../config';
+import { serverTimestamp } from '@firebase/firestore';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function ParkingLots({
   properties,
   geometry,
   destination,
   setDestination,
-  setIsParked
+  setIsParked,
+  isParked,
 }) {
   const [showPollution, setShowPollution] = useState(null);
 
   const AIRPOLLUTIONMARKER = {
-    good: "green",
-    ok: "orange",
-    bad: "black",
+    good: 'green',
+    ok: 'orange',
+    bad: 'black',
   };
 
   useEffect(() => {
@@ -45,24 +41,72 @@ export default function ParkingLots({
 
   const saveGeoLocation = () => {
     const uid = auth.currentUser.uid;
-    const userBikeGeoRef = doc(db, "users", uid, "bikeGeo", "bikeLocation");
-    setDoc(userBikeGeoRef, {
+
+    const userBikeGeoRef = doc(db, 'users', uid, 'bikeGeo', 'bikeLocation');
+
+    const userParkingHistoryRef = collection(
+      db,
+      'users',
+      uid,
+      'parkingHistory'
+    );
+
+    const locationData = {
       latitude: geometry.coordinates[1],
       longitude: geometry.coordinates[0],
       timestamp: serverTimestamp(),
-    })
+    };
+
+    // Save  bikeLocation
+    setDoc(userBikeGeoRef, locationData)
+      .then(() => {
+        console.log('Bike location saved.');
+      })
+      .catch((error) => {
+        console.log('Error saving bike location:', error);
+      });
+
+    // Save parking history
+    addDoc(userParkingHistoryRef, locationData)
       .then((parkingSpotRef) => {
         setIsParked({
           latitude: geometry.coordinates[1],
           longitude: geometry.coordinates[0],
-          parked: true
+          parked: true,
         });
-        console.log("Parking spot saved with ID:", parkingSpotRef);
+        console.log('Parking spot saved with ID:', parkingSpotRef.id);
       })
       .catch((error) => {
-        console.log("Error saving parking spot:", error);
+        console.log('Error saving parking spot:', error);
       });
+
+      // if(!isParked.parked){
+      //   setDoc(userBikeGeoRef, {
+      //     latitude: geometry.coordinates[1],
+      //     longitude: geometry.coordinates[0],
+      //     timestamp: serverTimestamp(),
+      //   })
+      //     .then((parkingSpotRef) => {
+      //       setIsParked({
+      //         latitude: geometry.coordinates[1],
+      //         longitude: geometry.coordinates[0],
+      //         parked: true
+      //       });
+      //       console.log("Parking spot saved with ID:", parkingSpotRef);
+      //     })
+      //     .catch((error) => {
+      //       console.log("Error saving parking spot:", error);
+      //     });
+      //   } else {
+      //     setIsParked({
+      //       latitude: null,
+      //       longitude: null,
+      //       parked: false
+      //     });
+      //     console.log("you got your bike back!");
+      //   }
   };
+
 
   return (
     <>
@@ -94,9 +138,14 @@ export default function ParkingLots({
             saveGeoLocation();
           }}
         >
-          <Text>Park Here</Text>
+          {isParked?.parked === true &&
+          isParked?.longitude === geometry.coordinates[0] ? (
+            <Text>Get My Bike</Text>
+          ) : (
+            <Text>Park Here</Text>
+          )}
           <View>
-            {Platform.OS === "ios" ? (
+            {Platform.OS === 'ios' ? (
               <Image
                 style={styles.thumbnail}
                 source={{
@@ -122,4 +171,11 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+  parkText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    left: 30
+  }
+  
+
 });

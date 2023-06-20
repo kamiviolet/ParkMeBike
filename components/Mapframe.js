@@ -32,11 +32,6 @@ export default function Mapframe({
   const [showRoute, setShowRoute] = useState(false)
   const [showTraffic, setShowTraffic] = useState(false)
   const [ratchetBellSound, setRachetBellSound] = useState();
-  const [isParked, setIsParked] = useState({
-    latitude: null,
-    longitude: null,
-    parked: false
-  })
 
   async function playRachetBell(){
     console.log('Loading sound');
@@ -55,6 +50,7 @@ export default function Mapframe({
     : undefined;
   }, [ratchetBellSound])
   
+
 
   useEffect(() => {
     fetchParking(locationParams, parkingLimit)
@@ -84,40 +80,25 @@ export default function Mapframe({
           showsMyLocationButton={true}
           loadingEnabled={true}
           showsTraffic={showTraffic}
-          initialRegion={{
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-          }}
-          initialCamera={{
-              latitude: locationParams.location.latitude,
-              longitude: locationParams.location.longitude,
-              latitudeDelta: 0.1,
-              longitudeDelta: 0.1
-          }}
+          // initialRegion={{
+          //     latitudeDelta: 0.0922,
+          //     longitudeDelta: 0.0421,
+          // }}
+          // initialCamera={{
+          //     latitude: locationParams.location.latitude,
+          //     longitude: locationParams.location.longitude,
+          //     latitudeDelta: 0.1,
+          //     longitudeDelta: 0.1
+          // }}
         >
           {
-            pointsOfInterest.map(({properties, geometry}) => {
-                return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked}/>
-            })
-          }
-          
-              {/* <Marker
-                coordinate={currLocation}
-              /> */}
-              {
-              isParked.parked ?
-              <Marker
-              coordinate={{
-                latitude: isParked.latitude,
-                longitude: isParked.longitude,
-              }}
-              style={styles.bikeLocation}
-              pinColor='purple'
-              onCalloutPress={() => {
-                console.log(geometry.coordinates);
-              }}>
-              </Marker>: <></>
-              }
+                        pointsOfInterest.map(({properties, geometry}) => {
+                             return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination}/>
+                        })
+                    }
+                    {/* <Marker
+                      coordinate={currLocation}
+                    /> */}
                     { 
                         showRoute && destination.latitude
                       ? <>
@@ -128,7 +109,7 @@ export default function Mapframe({
                       strokeWidth={4}
                       strokeColor='#111111'
                       mode='BICYCLING'
-                      onReady={(result)=>{}}
+                      onReady={(result)=>{console.log(result)}}
                     /> 
                       </>
                       :
@@ -198,8 +179,5 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     color: '#ffffff'
-  },
-  bikeLocation: {
-    zIndex: 7,
   }
 });

@@ -1,8 +1,10 @@
-import { StyleSheet, View, Text, Pressable, Button } from 'react-native';
+import { StyleSheet, View, Text, Pressable, Button, Dimensions } from 'react-native';
 import { Slider, Icon, CheckBox } from '@rneui/themed';
 import { color } from 'react-native-reanimated';
 import {Audio} from 'expo-av'
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
+import {ThemeContext} from '../providers/ThemeProvider'
+
 
 const ControlPanel = ({
   setLocationParams,
@@ -17,6 +19,7 @@ const ControlPanel = ({
   ratchetBellSound
 }) => {
   const [pingBellSound, setPingBellSound] = useState();
+  const {theme, toggleTheme} = useContext(ThemeContext);
 
   async function playPingBell(){
     console.log('Loading sound');
@@ -36,15 +39,15 @@ const ControlPanel = ({
   }, [pingBellSound])
   return (
     <>
-      <View style={styles.sliderWrapper}>
-        <Text style={styles.heading}>Radius</Text>
+      <View style={theme.name === 'light' ? styles.sliderLightWrapper : styles.sliderDarkWrapper}>
+        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>Radius: {locationParams.radius} km</Text>
         <Slider
           style={styles.radiusSlider}
           value={locationParams.radius}
           maximumValue={100}
           minimumValue={1}
-          minimumTrackTintColor="#ffffff"
-          maximumTrackTintColor="#000000"
+          minimumTrackTintColor= {theme.primary}
+          maximumTrackTintColor= {theme.text}
           step={1}
           // allowTouchTrack
           trackStyle={{ height: 5, backgroundColor: 'transparent' }}
@@ -64,15 +67,14 @@ const ControlPanel = ({
             setLocationParams({ ...locationParams, radius: e });
           }}
         />
-        <Text style={styles.label}>{locationParams.radius} km</Text>
-        <Text style={styles.heading}>Bike Parks</Text>
+        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>Bike Parks: {parkingLimit}</Text>
         <Slider
           style={styles.limitSlider}
           value={parkingLimit}
           maximumValue={10}
           minimumValue={1}
-          minimumTrackTintColor="#ffffff"
-          maximumTrackTintColor="#000000"
+          minimumTrackTintColor={theme.primary}
+          maximumTrackTintColor={theme.text}
           step={1}
           allowTouchTrack
           trackStyle={{ height: 5, backgroundColor: 'transparent' }}
@@ -92,7 +94,7 @@ const ControlPanel = ({
             setParkingLimit(e);
           }}
         />
-        <Text style={styles.label}>{parkingLimit} bike parks</Text>
+        <Text style={styles.label}></Text>
         <View style={styles.checkBoxStyle}>
         <CheckBox
           title="show route"
@@ -120,42 +122,45 @@ const ControlPanel = ({
 };
 
 const styles = StyleSheet.create({
-  sliderWrapper: {
+  sliderDarkWrapper: {
     position: 'absolute',
-    paddingHorizontal: 20,
-    bottom: 50,
-    zIndex: 3,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+    bottom: Dimensions.get('screen').width * 0.15,
     width: '100%',
-    height: 380,
     backgroundColor: '#000000c0',
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
+  },
+  sliderLightWrapper: {
+    position: 'absolute',
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+    bottom: Dimensions.get('screen').width * 0.15,
+    width: '100%',
+    backgroundColor: '#ccccccc0',
   },
   radiusSlider: {
-    // position: 'relative',
-    // top: 20,
-    zIndex: 3,
     width: '100%',
   },
   limitSlider: {
-    // position: 'relative',
-    // top: 70,
-    zIndex: 3,
     width: '100%',
   },
-  label: {
+  darkHeading: {
+    paddingVertical: 10,
     color: 'white',
-    top: 5,
-    bottom: 10
+    fontSize: 15,
+    fontWeight: 600
   },
-  heading: {
-    padding: 10,
-    color: 'white',
-    fontSize: 20,
+  lightHeading: {
+    paddingVertical: 10,
+    color: '#000000',
+    fontSize: 15,
+    fontWeight: 600
   },
-  checkBoxStyle: {
-    top: 10,
-    bottom: 10,
+  btnWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
   }
 });
 

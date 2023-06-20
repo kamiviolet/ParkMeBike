@@ -6,7 +6,7 @@ import { ThemeContext } from '../providers/ThemeProvider';
 import { useContext } from 'react';
 import HeaderTitle from '../components/HeaderTitle';
 import { ChangeEmail } from '../screens';
-import { Theme } from '../config/theme';
+
 
 const Stack = createStackNavigator();
 
