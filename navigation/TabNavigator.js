@@ -1,4 +1,4 @@
-import { HomeScreen, UserProfile } from '../screens';
+import { AboutUs, UserProfile } from '../screens';
 import SettingsScreen from '../screens/SettingsScreen';
 import Dashboard from '../screens/Dashboard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,14 +10,14 @@ import ParkingHistory from '../screens/ParkingHistory';
 const Tab = createBottomTabNavigator();
 
 //gets the user ID and renders UserProfile with it
-const UserProfileWithAuth = () => {
+const UserProfileWithAuth = ({navigation}) => {
   const { user } = useContext(AuthenticatedUserContext);
 
   if (!user) {
     return null; //loading indicator
   }
 
-  return <UserProfile userId={user.uid} />;
+  return <UserProfile userId={user.uid} navigation={navigation} />;
 };
 
 const TabNavigator = () => (
@@ -32,7 +32,7 @@ const TabNavigator = () => (
           iconName = focused
             ? 'information-circle'
             : 'information-circle-outline';
-        } else if (route.name === 'UserProfile') {
+        } else if (route.name === 'User Profile') {
           iconName = focused ? 'list' : 'list-outline';
         } else if (route.name === 'Dashboard') {
           iconName = focused ? 'map' : 'map-outline';
@@ -59,9 +59,9 @@ const TabNavigator = () => (
     })}
   >
     <Tab.Screen name="Dashboard" component={Dashboard} />
-    <Tab.Screen name="UserProfile" component={UserProfileWithAuth} />
+    <Tab.Screen name="User Profile" component={UserProfileWithAuth} />
     <Tab.Screen name="Settings" component={SettingsScreen} />
-    <Tab.Screen name="About" component={HomeScreen} />
+    <Tab.Screen name="About" component={AboutUs} />
   </Tab.Navigator>
 );
 
