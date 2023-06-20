@@ -5,6 +5,7 @@ import { ForgotPasswordScreen } from './ForgotPasswordScreen';
 import { UserProfile } from './UserProfile';
 import { SettingsScreen } from './SettingsScreen';
 import { ParkingHistory } from './ParkingHistory';
+import { ChangeEmail } from './ChangeEmail';
 
 export {
   LoginScreen,
@@ -14,4 +15,5 @@ export {
   UserProfile,
   SettingsScreen,
   ParkingHistory,
+  ChangeEmail,
 };

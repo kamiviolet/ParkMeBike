@@ -234,6 +234,13 @@ export const UserProfile = ({ userId, navigation }) => {
       <View style={styles.inputContainer}>
         <TextInput value={user.email} editable={false} style={styles.input} />
       </View>
+      <Text
+        onPress={() => navigation.navigate('ChangeEmail', { userId })}
+        style={styles.changeEmailLink}
+      >
+        Change Email
+      </Text>
+
       <View style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={goToHistoryScreen}>
           <Text style={styles.buttonText}>History</Text>
@@ -351,6 +358,12 @@ const styles = StyleSheet.create({
 
     marginLeft: 26,
     marginTop: 20,
+  },
+  changeEmailLink: {
+    color: '#2196f3',
+    marginLeft: 26,
+    alignSelf: 'flex-start',
+    fontSize: 14,
   },
 
   uploadImageIconContainer: {
