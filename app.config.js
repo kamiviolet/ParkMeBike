@@ -10,9 +10,9 @@ export default {
     orientation: 'portrait',
     icon: './assets/flame.png',
     splash: {
-      image: './assets/splash.png',
-      resizeMode: 'cover',
-      backgroundColor: '#F57C00',
+      image: './assets/bikeParkIcon.png',
+      resizeMode: 'native',
+      backgroundColor: '#fff',
     },
     updates: {
       fallbackToCacheTimeout: 0,

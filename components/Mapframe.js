@@ -7,11 +7,15 @@ import {
   Pressable,
   Modal,
   Button,
+  Dimensions
 } from 'react-native'; // Import Map and Marker
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { fetchParking } from '../utils/api';
 import ParkingLots from './ParkingLots';
 import ControlPanel from './ControlPanel';
+import MapViewDirections from 'react-native-maps-directions'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import {Audio} from 'expo-av'
 
 export default function Mapframe({
   locationParams,
@@ -21,15 +25,45 @@ export default function Mapframe({
   const [pointsOfInterest, setPointsOfInterest] = useState([]);
   const [parkingLimit, setParkingLimit] = useState(3);
   const [modalVisible, setModalVisible] = useState(false);
+  const [destination, setDestination] = useState({
+    latitude: null,
+    longitude: null
+  })
+  const [showRoute, setShowRoute] = useState(false)
+  const [showTraffic, setShowTraffic] = useState(false)
+  const [ratchetBellSound, setRachetBellSound] = useState();
+  const [isParked, setIsParked] = useState({
+    latitude: null,
+    longitude: null,
+    parked: false
+  })
+
+  async function playRachetBell(){
+    console.log('Loading sound');
+    const {ratchetBellSound} = await Audio.Sound.createAsync(require('../assets/bellcutup.mp3'), 
+    {shouldPlay: true}
+    );
+    setRachetBellSound(ratchetBellSound);
+  }
+
+  useEffect(()=>{
+    return ratchetBellSound
+    ? () => {
+      console.log('unloading sound')
+      sound.unloadAsync()
+    }
+    : undefined;
+  }, [ratchetBellSound])
+  
 
   useEffect(() => {
     fetchParking(locationParams, parkingLimit)
       .then(({ features }) => {
-        console.log(features[0].properties, 'features');
         setPointsOfInterest([...features]);
       })
       .catch((err) => console.log(err));
   }, [locationParams, parkingLimit]);
+
 
   if (locationParams.location != null) {
     return (
@@ -49,28 +83,58 @@ export default function Mapframe({
           showsUserLocation={true}
           showsMyLocationButton={true}
           loadingEnabled={true}
-          // toolbarEnabled={true}
-          showsTraffic={true}
-          // showsIndoors={true}
-          // initialRegion={{
-
-          //     // latitudeDelta: 0.0922,
-          //     // longitudeDelta: 0.0421,
-          //     latitudeDelta: 0.1,
-          //     longitudeDelta: 0.1
-          // }}
-          // initialCamera={{
-          //     latitude: locationParams.location.latitude,
-          //     longitude: locationParams.location.longitude,
-          //     latitudeDelta: 0.1,
-          //     longitudeDelta: 0.1
-          // }}
+          showsTraffic={showTraffic}
+          initialRegion={{
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+          }}
+          initialCamera={{
+              latitude: locationParams.location.latitude,
+              longitude: locationParams.location.longitude,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1
+          }}
         >
-          {/* {
-                        pointsOfInterest.map(({properties, geometry}) => {
-                             return <ParkingLots properties={properties} geometry={geometry} key={properties.id} />
-                        })
-                    } */}
+          {
+            pointsOfInterest.map(({properties, geometry}) => {
+                return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked}/>
+            })
+          }
+          
+              {/* <Marker
+                coordinate={currLocation}
+              /> */}
+              {
+              isParked.parked ?
+              <Marker
+              coordinate={{
+                latitude: isParked.latitude,
+                longitude: isParked.longitude,
+              }}
+              style={styles.bikeLocation}
+              pinColor='purple'
+              onCalloutPress={() => {
+                console.log(geometry.coordinates);
+              }}>
+              </Marker>: <></>
+              }
+                    { 
+                        showRoute && destination.latitude
+                      ? <>
+                      <MapViewDirections 
+                      origin={currLocation}
+                      destination={destination}
+                      apikey='AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4'
+                      strokeWidth={4}
+                      strokeColor='#111111'
+                      mode='BICYCLING'
+                      onReady={(result)=>{}}
+                    /> 
+                      </>
+                      :
+                      <></>
+                    }
+                  
         </MapView>
         <Modal
           animationType="slide"
@@ -87,14 +151,21 @@ export default function Mapframe({
             parkingLimit={parkingLimit}
             setParkingLimit={setParkingLimit}
             setModalVisible={setModalVisible}
+            showRoute={showRoute}
+            setShowRoute={setShowRoute}
+            showTraffic={showTraffic}
+            setShowTraffic={setShowTraffic}
+            ratchetBellSound={ratchetBellSound}
           />
         </Modal>
-        <Button
-          onPress={() => setModalVisible(!modalVisible)}
-          title="ControlPanel"
+        <Pressable style={styles.controlButton}
+          onPress={() => {
+            playRachetBell()
+            setModalVisible(!modalVisible)
+            }}
         >
-          Press me
-        </Button>
+        <Icon size={35} name={'sliders'} style={styles.iconStyle}/>
+        </Pressable>
       </View>
       // </SafeAreaView>
     );
@@ -115,4 +186,20 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: -1,
   },
+  controlButton: {
+    position: 'absolute',
+    bottom: 80,
+    right: 0,
+    margin: 15,
+    zIndex: 5,
+    padding: 10,
+    backgroundColor: '#2D8CFF',
+    borderRadius: Dimensions.get('window').width * 0.5,
+  },
+  iconStyle: {
+    color: '#ffffff'
+  },
+  bikeLocation: {
+    zIndex: 7,
+  }
 });

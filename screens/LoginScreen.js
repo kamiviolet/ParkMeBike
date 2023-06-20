@@ -3,7 +3,8 @@ import { Text, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Pressable } from 'react-native';
 import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import {
   Images,
@@ -37,9 +38,24 @@ export const LoginScreen = ({ navigation }) => {
       <View isSafe style={styles.container}>
         <KeyboardAwareScrollView enableOnAndroid={true}>
           {/* LogoContainer: consits app logo and screen title */}
-          <View style={styles.logoContainer}>
-            <Logo uri={Images.logo} />
-            <Text style={styles.screenTitle}>Park Me Bike!</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}
+          >
+            <Ionicons name="bicycle" size={45} color="#fff" />
+            <Text
+              style={{
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: 40,
+                marginLeft: 10,
+              }}
+            >
+              Park Me Bike
+            </Text>
           </View>
           <Formik
             initialValues={{
@@ -122,7 +138,9 @@ export const LoginScreen = ({ navigation }) => {
 
       {/* App info footer */}
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Park your bike!</Text>
+        <Text style={styles.footerText}>
+          
+        </Text>
       </View>
     </>
   );
@@ -131,35 +149,25 @@ export const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: '#0c797d',
     paddingHorizontal: 12,
+    paddingTop: '60%',
   },
-  logoContainer: {
+  innerContainer: {
     alignItems: 'center',
   },
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: Colors.black,
-    paddingTop: 20,
-  },
-  footer: {
-    backgroundColor: Colors.white,
-    paddingHorizontal: 12,
-    paddingBottom: 48,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: '700',
     color: Colors.white,
+    paddingTop: 20,
   },
   button: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.grey,
     padding: 10,
     borderRadius: 8,
   },
@@ -172,5 +180,20 @@ const styles = StyleSheet.create({
     marginTop: 16,
     alignItems: 'center',
     justifyContent: 'center',
+    fontSize: 30,
+  },
+  logoContainer: {
+    alignItems: 'center',
+  },
+  footer: {
+    backgroundColor: '#0c797d',
+    paddingHorizontal: 12,
+    paddingBottom: 48,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.white,
   },
 });

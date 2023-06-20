@@ -1,6 +1,8 @@
 import { StyleSheet, View, Text, Pressable, Button } from 'react-native';
 import { Slider, Icon, CheckBox } from '@rneui/themed';
 import { color } from 'react-native-reanimated';
+import {Audio} from 'expo-av'
+import {useState, useEffect} from 'react'
 
 const ControlPanel = ({
   setLocationParams,
@@ -12,7 +14,26 @@ const ControlPanel = ({
   setShowTraffic,
   showRoute,
   setShowRoute,
+  ratchetBellSound
 }) => {
+  const [pingBellSound, setPingBellSound] = useState();
+
+  async function playPingBell(){
+    console.log('Loading sound');
+    const {pingBellSound} = await Audio.Sound.createAsync(require('../assets/bellping.mp3'), 
+    {shouldPlay: true}
+    );
+    setPingBellSound(pingBellSound);
+  }
+
+  useEffect(()=>{
+    return ratchetBellSound
+    ? () => {
+      console.log('unloading sound')
+      sound.unloadAsync()
+    }
+    : undefined;
+  }, [pingBellSound])
   return (
     <>
       <View style={styles.sliderWrapper}>
@@ -72,6 +93,7 @@ const ControlPanel = ({
           }}
         />
         <Text style={styles.label}>{parkingLimit} bike parks</Text>
+        <View style={styles.checkBoxStyle}>
         <CheckBox
           title="show route"
           checked={showRoute}
@@ -82,10 +104,12 @@ const ControlPanel = ({
           checked={showTraffic}
           onPress={() => setShowTraffic(!showTraffic)}
         />
+        </View>
         <Button
           title="close"
           onPress={() => {
             setModalVisible(false);
+            playPingBell()
           }}
         >
           Close
@@ -104,8 +128,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 380,
     backgroundColor: '#000000c0',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
   },
   radiusSlider: {
     // position: 'relative',
@@ -121,12 +145,18 @@ const styles = StyleSheet.create({
   },
   label: {
     color: 'white',
+    top: 5,
+    bottom: 10
   },
   heading: {
     padding: 10,
     color: 'white',
     fontSize: 20,
   },
+  checkBoxStyle: {
+    top: 10,
+    bottom: 10,
+  }
 });
 
 export default ControlPanel;

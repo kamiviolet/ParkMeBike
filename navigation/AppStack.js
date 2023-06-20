@@ -1,39 +1,41 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigator from './TabNavigator';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text } from 'react-native';
+import { ParkingHistory } from '../screens';
+import { ThemeContext } from '../providers/ThemeProvider';
+import { useContext } from 'react';
+import HeaderTitle from '../components/HeaderTitle';
+import { Theme } from '../config/theme';
 
 const Stack = createStackNavigator();
 
-const HeaderTitle = () => (
-  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-    <Ionicons name="bicycle" size={28} color="#fff" />
-    <Text
-      style={{
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 20,
-        marginLeft: 10,
-      }}
-    >
-      Park Me Bike
-    </Text>
-  </View>
-);
-
 export const AppStack = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Main"
         component={TabNavigator}
         options={{
-          headerTitle: (props) => <HeaderTitle {...props} />,
+          headerTitle: (props) => <HeaderTitle {...props} theme={theme} />,
           headerStyle: {
-            backgroundColor: '#000000',
+            backgroundColor: theme.background,
+            // color: theme.text,
             height: 80,
           },
-          headerTintColor: '#fff',
+          headerTintColor: theme.text,
+        }}
+      />
+      <Stack.Screen
+        name="ParkingHistory"
+        component={ParkingHistory}
+        options={{
+          title: 'Parking History',
+          headerStyle: {
+            backgroundColor: theme.background,
+            height: 80,
+          },
+          headerTintColor: theme.text,
         }}
       />
     </Stack.Navigator>
