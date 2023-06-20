@@ -45,7 +45,7 @@ export const ParkingHistory = () => {
     <View style={{ ...styles.container, backgroundColor: theme.background }}>
       {parkingSpots.map((spot) => (
         <View key={spot.id} style={styles.spotContainer}>
-          <Text style={{color: theme.text}}>{spot.address}</Text>
+          <Text>{spot.address}</Text>
         </View>
       ))}
     </View>
