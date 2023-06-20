@@ -15,6 +15,7 @@ import ParkingLots from './ParkingLots';
 import ControlPanel from './ControlPanel';
 import MapViewDirections from 'react-native-maps-directions'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import {Audio} from 'expo-av'
 
 export default function Mapframe({
   locationParams,
@@ -30,6 +31,24 @@ export default function Mapframe({
   })
   const [showRoute, setShowRoute] = useState(false)
   const [showTraffic, setShowTraffic] = useState(false)
+  const [ratchetBellSound, setRachetBellSound] = useState();
+
+  async function playRachetBell(){
+    console.log('Loading sound');
+    const {ratchetBellSound} = await Audio.Sound.createAsync(require('../assets/bellcutup.mp3'), 
+    {shouldPlay: true}
+    );
+    setRachetBellSound(ratchetBellSound);
+  }
+
+  useEffect(()=>{
+    return ratchetBellSound
+    ? () => {
+      console.log('unloading sound')
+      sound.unloadAsync()
+    }
+    : undefined;
+  }, [ratchetBellSound])
   
 
 
@@ -73,9 +92,9 @@ export default function Mapframe({
           // }}
         >
           {
-                        // pointsOfInterest.map(({properties, geometry}) => {
-                        //      return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination}/>
-                        // })
+                        pointsOfInterest.map(({properties, geometry}) => {
+                             return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination}/>
+                        })
                     }
                     <Marker
                       coordinate={currLocation}
@@ -117,10 +136,14 @@ export default function Mapframe({
             setShowRoute={setShowRoute}
             showTraffic={showTraffic}
             setShowTraffic={setShowTraffic}
+            ratchetBellSound={ratchetBellSound}
           />
         </Modal>
         <Pressable style={styles.controlButton}
-          onPress={() => setModalVisible(!modalVisible)}
+          onPress={() => {
+            playRachetBell()
+            setModalVisible(!modalVisible)
+            }}
         >
         <Icon size={35} name={'sliders'} style={styles.iconStyle}/>
         </Pressable>

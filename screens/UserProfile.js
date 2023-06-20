@@ -22,6 +22,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import uuid from 'uuid';
 import { db } from '../config';
 import { auth } from '../config';
+import { FontAwesome } from '@expo/vector-icons';
+
 import { signOut } from 'firebase/auth';
 
 const DeleteUserProfile = ({ onPress }) => (
@@ -181,6 +183,12 @@ export const UserProfile = ({ userId }) => {
         .catch((error) => console.log('Error updating user data!: ', error));
     }
   };
+
+  const UploadImageIcon = ({ onPress }) => (
+    <Pressable onPress={onPress} style={styles.uploadImageIconContainer}>
+      <FontAwesome name="camera" size={20} color="gray" />
+    </Pressable>
+  );
   const handleDeleteProfile = async () => {
     const userDocRef = doc(collection(db, 'users'), userId);
     try {
@@ -195,14 +203,7 @@ export const UserProfile = ({ userId }) => {
       console.log('error deleting your profile');
     }
   };
-  // const deleteAccount = async () => {
-  //   try {
-  //     await auth.currentUser.delete();
-  //     console.log("deleted");
-  //   } catch (error) {
-  //     console.log("not deleted");
-  //   }
-  // };
+
 
   const deleteAccount = async () => {
     try {
@@ -243,7 +244,8 @@ export const UserProfile = ({ userId }) => {
   }
 
   return (
-    <View style={styles.container}>
+  <View style={styles.container}>
+    <View style={styles.profilePictureContainer}>
       {newProfileImage ? (
         <Image source={{ uri: newProfileImage }} style={styles.profileImage} />
       ) : user && user.profileImage ? (
@@ -258,29 +260,26 @@ export const UserProfile = ({ userId }) => {
         />
       )}
 
-      <Text style={styles.usernameStyle}>{user.username}</Text>
+      <UploadImageIcon onPress={handleProfileImageUpload} />
+    </View>
 
-      <Text style={styles.textStyle} onPress={handleProfileImageUpload}>
-        Upload Profile Picture
-      </Text>
-
+    <Text style={styles.inputLabel}>Username</Text>
+    <View style={styles.inputContainer}>
+      <TextInput
+        value={user.username}
+        editable={false}
+        style={styles.input}
+      />
+    </View>
+    <Text style={styles.inputLabel}>Email address</Text>
+    <View style={styles.inputContainer}>
       <TextInput
         value={user.email}
         editable={false}
-        placeholder="Email"
         style={styles.input}
-        color="#000"
-        backgroundColor="#fff"
       />
+    </View>
 
-      <TextInput
-        value={newLocation}
-        onChangeText={setNewLocation}
-        placeholder="Location"
-        style={styles.input}
-        color="#000"
-        backgroundColor="#fff"
-      />
       <DeleteUserProfile title="Delete" onPress={deleteAccount} color="red" />
       <Modal
         animationType="slide"
@@ -333,9 +332,13 @@ export const UserProfile = ({ userId }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#555',
+    backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20, 
+  },
+  profilePictureContainer: {
+    marginBottom: 10, 
   },
   profileImage: {
     width: 125,
@@ -345,11 +348,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     borderWidth: 3,
   },
-  usernameStyle: {
-    color: '#FFF',
-    fontSize: 18,
-    marginBottom: 20,
-  },
+
   textStyle: {
     color: '#2196f3',
     fontWeight: 'bold',
@@ -362,14 +361,32 @@ const styles = StyleSheet.create({
     height: 200,
   },
   input: {
-    height: 40,
-    width: 200,
-    margin: 12,
-    borderWidth: 1,
+    height: 50,
+    width: 300,
+    margin: 5,
     padding: 10,
-    borderRadius: 5,
-    backgroundColor: '#fff',
+    borderRadius: 10,
+    fontSize: 16,
+    backgroundColor: '#F6F6F6',
     color: '#000',
+  },
+
+  inputLabel: {
+    alignSelf: 'flex-start', 
+    fontSize: 14, 
+    color: '#000',
+   
+    marginLeft: 26, 
+    marginTop: 20, 
+  },
+  
+  uploadImageIconContainer: {
+    position: 'absolute', 
+    bottom: 35, 
+    right: 0, 
+    backgroundColor: 'white', 
+    borderRadius: 20, 
+    padding: 5, 
   },
   centeredView: {
     flex: 1,

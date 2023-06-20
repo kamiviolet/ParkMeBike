@@ -28,7 +28,7 @@ const TabNavigator = () => (
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
 
-        if (route.name === 'Cool stuff') {
+        if (route.name === 'About') {
           iconName = focused
             ? 'information-circle'
             : 'information-circle-outline';
@@ -60,8 +60,8 @@ const TabNavigator = () => (
   >
     <Tab.Screen name="Dashboard" component={Dashboard} />
     <Tab.Screen name="UserProfile" component={UserProfileWithAuth} />
-    <Tab.Screen name="Cool stuff" component={HomeScreen} />
     <Tab.Screen name="Settings" component={SettingsScreen} />
+    <Tab.Screen name="About" component={HomeScreen} />
   </Tab.Navigator>
 );
 
