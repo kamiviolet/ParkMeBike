@@ -13,7 +13,6 @@ import { useState, useEffect } from 'react';
 import { fetchPollution } from '../utils/api';
 import { auth, db, collection, addDoc, setDoc, doc } from '../config';
 import { serverTimestamp } from '@firebase/firestore';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function ParkingLots({
   properties,
@@ -80,33 +79,32 @@ export default function ParkingLots({
         console.log('Error saving parking spot:', error);
       });
 
-      // if(!isParked.parked){
-      //   setDoc(userBikeGeoRef, {
-      //     latitude: geometry.coordinates[1],
-      //     longitude: geometry.coordinates[0],
-      //     timestamp: serverTimestamp(),
-      //   })
-      //     .then((parkingSpotRef) => {
-      //       setIsParked({
-      //         latitude: geometry.coordinates[1],
-      //         longitude: geometry.coordinates[0],
-      //         parked: true
-      //       });
-      //       console.log("Parking spot saved with ID:", parkingSpotRef);
-      //     })
-      //     .catch((error) => {
-      //       console.log("Error saving parking spot:", error);
-      //     });
-      //   } else {
-      //     setIsParked({
-      //       latitude: null,
-      //       longitude: null,
-      //       parked: false
-      //     });
-      //     console.log("you got your bike back!");
-      //   }
+    // if(!isParked.parked){
+    //   setDoc(userBikeGeoRef, {
+    //     latitude: geometry.coordinates[1],
+    //     longitude: geometry.coordinates[0],
+    //     timestamp: serverTimestamp(),
+    //   })
+    //     .then((parkingSpotRef) => {
+    //       setIsParked({
+    //         latitude: geometry.coordinates[1],
+    //         longitude: geometry.coordinates[0],
+    //         parked: true
+    //       });
+    //       console.log("Parking spot saved with ID:", parkingSpotRef);
+    //     })
+    //     .catch((error) => {
+    //       console.log("Error saving parking spot:", error);
+    //     });
+    //   } else {
+    //     setIsParked({
+    //       latitude: null,
+    //       longitude: null,
+    //       parked: false
+    //     });
+    //     console.log("you got your bike back!");
+    //   }
   };
-
 
   return (
     <>
@@ -171,11 +169,4 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
-  parkText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    left: 30
-  }
-  
-
 });
