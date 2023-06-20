@@ -5,6 +5,7 @@ import { ParkingHistory } from '../screens';
 import { ThemeContext } from '../providers/ThemeProvider';
 import { useContext } from 'react';
 import HeaderTitle from '../components/HeaderTitle';
+import { ChangeEmail } from '../screens';
 import { Theme } from '../config/theme';
 
 const Stack = createStackNavigator();
@@ -31,6 +32,18 @@ export const AppStack = () => {
         component={ParkingHistory}
         options={{
           title: 'Parking History',
+          headerStyle: {
+            backgroundColor: theme.background,
+            height: 80,
+          },
+          headerTintColor: theme.text,
+        }}
+      />
+      <Stack.Screen
+        name="ChangeEmail"
+        component={ChangeEmail}
+        options={{
+          title: 'Change Email',
           headerStyle: {
             backgroundColor: theme.background,
             height: 80,
