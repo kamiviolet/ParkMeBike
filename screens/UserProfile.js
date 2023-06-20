@@ -9,6 +9,7 @@ import {
   Pressable,
   Modal,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {
   collection,
@@ -23,12 +24,7 @@ import uuid from 'uuid';
 import { db } from '../config';
 import { auth } from '../config';
 import { FontAwesome } from '@expo/vector-icons';
-
-import { signOut } from 'firebase/auth';
-
-const DeleteUserProfile = ({ onPress }) => (
-  <Button title="Delete Profile" onPress={onPress} color="red" />
-);
+import ParkingHistory from './ParkingHistory';
 
 const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
@@ -71,7 +67,8 @@ const uploadBikeImageAsync = (uri) => {
   });
 };
 
-export const UserProfile = ({ userId }) => {
+export const UserProfile = ({ userId, navigation }) => {
+  console.log(navigation);
   const [user, setUser] = useState(null);
   const [newName, setNewName] = useState('');
   const [newLocation, setNewLocation] = useState('');
@@ -189,50 +186,9 @@ export const UserProfile = ({ userId }) => {
       <FontAwesome name="camera" size={20} color="gray" />
     </Pressable>
   );
-  const handleDeleteProfile = async () => {
-    const userDocRef = doc(collection(db, 'users'), userId);
-    try {
-      (await deleteDoc(userDocRef)) && (await auth.currentUser.delete());
-      if (user?.profileImage) {
-        const fileRef = ref(getStorage(), user.profileImage);
-        await deleteObject(fileRef);
-      }
-      auth.signOut();
-      navigation.replace('Login');
-    } catch (error) {
-      console.log('error deleting your profile');
-    }
-  };
 
-
-  const deleteAccount = async () => {
-    try {
-      const confrimDeletion = await new Promise((resolve) => {
-        Alert.alert(
-          'Delete Account',
-          'Are you sure you want to delete your account?',
-          [
-            {
-              text: 'No',
-              style: 'cancel',
-              onPress: () => resolve(false),
-            },
-            {
-              text: 'yes',
-              style: 'destructive',
-              onPress: () => resolve(true),
-            },
-          ],
-          { cancelable: false }
-        );
-      });
-      if (confrimDeletion) {
-        await auth.currentUser.delete();
-      }
-      console.log('deleted');
-    } catch (error) {
-      console.log('not deleted');
-    }
+  const goToHistoryScreen = () => {
+    navigation.navigate('ParkingHistory');
   };
 
   if (!user) {
@@ -244,43 +200,46 @@ export const UserProfile = ({ userId }) => {
   }
 
   return (
-  <View style={styles.container}>
-    <View style={styles.profilePictureContainer}>
-      {newProfileImage ? (
-        <Image source={{ uri: newProfileImage }} style={styles.profileImage} />
-      ) : user && user.profileImage ? (
-        <Image
-          source={{ uri: user.profileImage }}
-          style={styles.profileImage}
+    <View style={styles.container}>
+      <View style={styles.profilePictureContainer}>
+        {newProfileImage ? (
+          <Image
+            source={{ uri: newProfileImage }}
+            style={styles.profileImage}
+          />
+        ) : user && user.profileImage ? (
+          <Image
+            source={{ uri: user.profileImage }}
+            style={styles.profileImage}
+          />
+        ) : (
+          <Image
+            source={require('../assets/profile-placeholder.png')}
+            style={styles.profileImage}
+          />
+        )}
+
+        <UploadImageIcon onPress={handleProfileImageUpload} />
+      </View>
+
+      <Text style={styles.inputLabel}>Username</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          value={user.username}
+          editable={false}
+          style={styles.input}
         />
-      ) : (
-        <Image
-          source={require('../assets/profile-placeholder.png')}
-          style={styles.profileImage}
-        />
-      )}
+      </View>
+      <Text style={styles.inputLabel}>Email address</Text>
+      <View style={styles.inputContainer}>
+        <TextInput value={user.email} editable={false} style={styles.input} />
+      </View>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.button} onPress={goToHistoryScreen}>
+          <Text style={styles.buttonText}>History</Text>
+        </TouchableOpacity>
+      </View>
 
-      <UploadImageIcon onPress={handleProfileImageUpload} />
-    </View>
-
-    <Text style={styles.inputLabel}>Username</Text>
-    <View style={styles.inputContainer}>
-      <TextInput
-        value={user.username}
-        editable={false}
-        style={styles.input}
-      />
-    </View>
-    <Text style={styles.inputLabel}>Email address</Text>
-    <View style={styles.inputContainer}>
-      <TextInput
-        value={user.email}
-        editable={false}
-        style={styles.input}
-      />
-    </View>
-
-      <DeleteUserProfile title="Delete" onPress={deleteAccount} color="red" />
       <Modal
         animationType="slide"
         transparent={true}
@@ -335,10 +294,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20, 
+    padding: 20,
+    paddingTop: 50,
   },
   profilePictureContainer: {
-    marginBottom: 10, 
+    marginBottom: 10,
   },
   profileImage: {
     width: 125,
@@ -360,6 +320,19 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+
+  button: {
+    backgroundColor: '#2196f3',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20,
+  },
   input: {
     height: 50,
     width: 300,
@@ -372,21 +345,21 @@ const styles = StyleSheet.create({
   },
 
   inputLabel: {
-    alignSelf: 'flex-start', 
-    fontSize: 14, 
+    alignSelf: 'flex-start',
+    fontSize: 14,
     color: '#000',
-   
-    marginLeft: 26, 
-    marginTop: 20, 
+
+    marginLeft: 26,
+    marginTop: 20,
   },
-  
+
   uploadImageIconContainer: {
-    position: 'absolute', 
-    bottom: 35, 
-    right: 0, 
-    backgroundColor: 'white', 
-    borderRadius: 20, 
-    padding: 5, 
+    position: 'absolute',
+    bottom: 35,
+    right: 0,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 5,
   },
   centeredView: {
     flex: 1,
