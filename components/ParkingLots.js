@@ -159,9 +159,9 @@ export default function ParkingLots({
         >
           {isParked?.parked === true &&
           isParked?.longitude === geometry.coordinates[0] ? (
-            <Text>Get My Bike</Text>
+            <Text style={styles.getBike}>Get My Bike</Text>
           ) : (
-            <Text>Park Here</Text>
+            <Text style={styles.parkBike}>Park Here</Text>
           )}
           <View>
             {Platform.OS === 'ios' ? (
@@ -191,4 +191,15 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
+  getBike: {
+    backgroundColor: "#2196F3",
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  parkBike: {
+    backgroundColor: "#2196F3",
+    fontWeight: 'bold',
+    textAlign: 'center'
+  }
+
 });
