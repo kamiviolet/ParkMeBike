@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { db, collection, getDocs } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
 import * as Location from 'expo-location';
 import { ThemeContext } from '../providers/ThemeProvider';
-import { orderBy } from 'firebase/firestore';
 
 export const ParkingHistory = () => {
   const [parkingSpots, setParkingSpots] = useState([]);
@@ -23,8 +22,11 @@ export const ParkingHistory = () => {
     getDocs(collectionRef)
       .then((querySnapshot) => {
         const spots = querySnapshot.docs.map((doc) => {
-          return { id: doc.id, ...doc.data() };
+          const spotData = doc.data();
+          return { id: doc.id, ...spotData };
         });
+
+        spots.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
         return spots;
       })
       .then(async (spots) => {
@@ -43,13 +45,18 @@ export const ParkingHistory = () => {
   }, [userId]);
 
   return (
-    <View style={{ ...styles.container, backgroundColor: theme.background }}>
+    <ScrollView
+      contentContainerStyle={{
+        ...styles.container,
+        backgroundColor: theme.background,
+      }}
+    >
       {parkingSpots.map((spot) => (
         <View key={spot.id} style={styles.spotContainer}>
           <Text>{spot.address}</Text>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
