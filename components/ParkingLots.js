@@ -8,7 +8,7 @@ import {
   Alert
 } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchPollution } from '../utils/api';
 import { auth, db, collection, addDoc, setDoc, doc } from '../config';
 import { serverTimestamp } from '@firebase/firestore';
@@ -23,7 +23,8 @@ export default function ParkingLots({
   showRoute,
 }) {
   const [showPollution, setShowPollution] = useState(null);
-
+  const marker = useRef(null)
+  const [pinColor, setPinColor] = useState(null);
   const AIRPOLLUTIONMARKER = {
     good: 'green',
     ok: 'orange',
@@ -37,6 +38,14 @@ export default function ParkingLots({
   //     }
   //   );
   // }, [geometry]);
+
+  useEffect(()=>{
+    if (geometry.coordinates[1] === isParked.latitude && geometry.coordinates[0] === isParked.longitude) {
+      setPinColor('purple')
+    } else {
+      setPinColor('red')
+    }
+  }, [isParked])
 
   const saveGeoLocation = () => {
 
@@ -125,14 +134,14 @@ export default function ParkingLots({
   return (
     <>
       <Marker
+      ref={marker}
         coordinate={{
           latitude: geometry.coordinates[1],
           longitude: geometry.coordinates[0],
         }}
         title={properties.name}
-
-        // pinColor={
-        //   showPollution <= 2
+        pinColor={pinColor}
+        //     : showPollution <= 2
         //     ? AIRPOLLUTIONMARKER.good
         //     : showPollution === 3
         //     ? AIRPOLLUTIONMARKER.ok
