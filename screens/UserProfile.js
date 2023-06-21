@@ -26,6 +26,7 @@ import { auth } from '../config';
 import { FontAwesome } from '@expo/vector-icons';
 import ParkingHistory from './ParkingHistory';
 import { ThemeContext } from '../providers/ThemeProvider';
+import { ScrollView } from 'react-native';
 
 const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
@@ -203,7 +204,12 @@ export const UserProfile = ({ userId, navigation }) => {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <ScrollView 
+  contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}
+  showsVerticalScrollIndicator={true}>
+  <View style={[styles.container, { backgroundColor: theme.background }]}>
+  
+  
       <View style={styles.profilePictureContainer}>
         {newProfileImage ? (
           <Image
@@ -251,8 +257,8 @@ export const UserProfile = ({ userId, navigation }) => {
     style={[styles.button, { backgroundColor: theme.primary }]}
     onPress={goToHistoryScreen}
   >
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <FontAwesome name="history" size={20} color={theme.mode === 'dark' ? 'black' : 'white'} />
+     <View style={styles.iconContainer}>
+      <FontAwesome name="history" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
       <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
         View your recent history
       </Text>
@@ -265,8 +271,8 @@ export const UserProfile = ({ userId, navigation }) => {
     style={[styles.button, {backgroundColor: theme.primary}]} 
     onPress={() => setModalVisible(true)}
   >
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <FontAwesome name="camera" size={20} color={theme.mode === 'dark' ? 'black' : 'white'} />
+    <View style={styles.iconContainer}>
+      <FontAwesome name="camera" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
       <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
         Take Bike Image
       </Text>
@@ -279,8 +285,8 @@ export const UserProfile = ({ userId, navigation }) => {
     style={[styles.button, {backgroundColor: theme.primary}]} 
     onPress={handleSave}
   >
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <FontAwesome name="save" size={20} color={theme.mode === 'dark' ? 'black' : 'white'} />
+       <View style={styles.iconContainer}>
+      <FontAwesome name="save" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
       <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
         Save Changes
       </Text>
@@ -333,17 +339,19 @@ export const UserProfile = ({ userId, navigation }) => {
         
       </Text>
     </View>
+     </ScrollView>
   );
+  
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
-    paddingTop: 50,
+                
+  
   },
   profilePictureContainer: {
     marginTop: 50,
@@ -371,9 +379,14 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     marginTop: 30,
-    width: '100%',
+    width: 330,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
   },
   button: {
     backgroundColor: '#2196F3',
@@ -392,9 +405,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    textAlign: 'center',
     fontSize: 18,
     fontWeight: '600',
+    marginLeft: 10,  //space out icon
   },
   input: {
     height: 50,
