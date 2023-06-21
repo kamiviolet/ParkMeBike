@@ -102,10 +102,12 @@ export default function Mapframe({
         >
           {
             pointsOfInterest.map(({properties, geometry}) => {
+
                 return <ParkingLots showRoute={showRoute} properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked}/>
             })
           }
           
+
               {
               isParked.parked 
               ? <Marker
@@ -231,5 +233,6 @@ const styles = StyleSheet.create({
   },
   disabled: {
     backgroundColor: '#666666',
+
   }
 });

@@ -39,6 +39,8 @@ export default function ParkingLots({
   // }, [geometry]);
 
   const saveGeoLocation = () => {
+
+
     const uid = auth.currentUser.uid;
     const userBikeGeoRef = doc(db, 'users', uid, 'bikeGeo', 'bikeLocation');
     const userParkingHistoryRef = collection(db, 'users', uid, 'parkingHistory');
@@ -49,7 +51,23 @@ export default function ParkingLots({
       timestamp: serverTimestamp(),
     };
 
+
+    const getBackMyBike = () => {
+      setIsParked({
+        latitude: null,
+        longitude: null,
+        parked: false
+      });
+      console.log('You got your bike back!')
+      Alert.alert('You got your bike back!');
+    }
+
+  
+      
+      
+
     const handleOkPress = () => {
+
       // Save bikeLocation
       setDoc(userBikeGeoRef, locationData)
         .then(() => {
@@ -72,17 +90,37 @@ export default function ParkingLots({
         .catch((error) => {
           console.log('Error saving parking spot:', error);
         });
-    };
 
-    Alert.alert(
-      'Save Location?',
-      'Are you sure you want to save your location?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Okay', onPress: handleOkPress },
-      ]
-    );
+      
+    };
+  
+    if(isParked.parked && isParked.latitude === geometry.coordinates[1]) {
+      Alert.alert(
+        'Get your bike back?',
+        'Press OK to confirm' ,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Okay', onPress: getBackMyBike },
+        ])
+    
+    } else if(!isParked.parked){
+      console.log("thumbnail geo",geometry.coordinates)
+      console.log("state geo", isParked)
+      Alert.alert(
+        'Save Location?',
+        'Are you sure you want to save your location?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Okay', onPress: handleOkPress },
+        ]
+      );
+    } else {
+      Alert.alert(
+        'You parked your bike already!')
+    }
   };
+
+  
 
   return (
     <>
@@ -92,6 +130,7 @@ export default function ParkingLots({
           longitude: geometry.coordinates[0],
         }}
         title={properties.name}
+
         // pinColor={
         //   showPollution <= 2
         //     ? AIRPOLLUTIONMARKER.good
@@ -100,7 +139,8 @@ export default function ParkingLots({
         //     : AIRPOLLUTIONMARKER.bad
         // }
         onPress={showRoute? (e) => setDestination({...destination, ...e.nativeEvent.coordinate}) : ()=>{}}
-        onCalloutPress={() => saveGeoLocation()}
+//         onCalloutPress={() => saveGeoLocation()}
+
       >
         <Callout
           onPress={() => {
