@@ -25,6 +25,7 @@ export default function ParkingLots({
   const [showPollution, setShowPollution] = useState(null);
   const marker = useRef(null)
   const [pinColor, setPinColor] = useState(null);
+  const [calloutText, setCalloutText] = useState('Park Here')
   const AIRPOLLUTIONMARKER = {
     good: 'green',
     ok: 'orange',
@@ -41,8 +42,12 @@ export default function ParkingLots({
 
   useEffect(()=>{
     if (geometry.coordinates[1] === isParked.latitude && geometry.coordinates[0] === isParked.longitude) {
+      setCalloutText('Get my Bike')
+      marker.current.hideCallout()
       setPinColor('purple')
     } else {
+      setCalloutText('Park Here')
+      marker.current.hideCallout()
       setPinColor('red')
     }
   }, [isParked])
@@ -157,13 +162,9 @@ export default function ParkingLots({
             saveGeoLocation();
           }}
         >
-          {isParked?.parked === true &&
-          isParked?.longitude === geometry.coordinates[0] ? (
-            <Text style={styles.getBike}>Get My Bike</Text>
-          ) : (
-              <Text style={styles.parkBike}>Park Here
-              </Text>
-          )}
+          
+            <Text style={styles.getBike}>{calloutText}</Text>
+          
             {Platform.OS === "ios" ? (
               <Image 
                 style={styles.thumbnail}
@@ -204,5 +205,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     fontWeight: "bold",
     textAlign: "center",
+    color: 'white'
   },
 });
