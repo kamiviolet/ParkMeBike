@@ -26,7 +26,9 @@ import { auth } from '../config';
 import { FontAwesome } from '@expo/vector-icons';
 import ParkingHistory from './ParkingHistory';
 import { ThemeContext } from '../providers/ThemeProvider';
+
 import { ScrollView } from 'react-native';
+
 
 const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
@@ -204,12 +206,14 @@ export const UserProfile = ({ userId, navigation }) => {
   }
 
   return (
+
     <ScrollView 
   contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}
   showsVerticalScrollIndicator={true}>
   <View style={[styles.container, { backgroundColor: theme.background }]}>
   
   
+
       <View style={styles.profilePictureContainer}>
         {newProfileImage ? (
           <Image
@@ -271,8 +275,10 @@ export const UserProfile = ({ userId, navigation }) => {
     style={[styles.button, {backgroundColor: theme.primary}]} 
     onPress={() => setModalVisible(true)}
   >
+
     <View style={styles.iconContainer}>
       <FontAwesome name="camera" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
+
       <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
         Take Bike Image
       </Text>
@@ -285,8 +291,10 @@ export const UserProfile = ({ userId, navigation }) => {
     style={[styles.button, {backgroundColor: theme.primary}]} 
     onPress={handleSave}
   >
+
        <View style={styles.iconContainer}>
       <FontAwesome name="save" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
+
       <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
         Save Changes
       </Text>
@@ -388,6 +396,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
+
   button: {
     backgroundColor: '#2196F3',
     paddingVertical: 10,
@@ -408,6 +417,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginLeft: 10,  //space out icon
+
   },
   input: {
     height: 50,

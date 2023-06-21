@@ -97,13 +97,11 @@ export default function Mapframe({
         >
           {
             pointsOfInterest.map(({properties, geometry}) => {
-                return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked}/>
+                return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} isParked={isParked}setIsParked={setIsParked}/>
             })
           }
           
-              {<Marker
-                coordinate={currLocation}
-              /> }
+
               {
               isParked.parked ?
               <Marker
@@ -200,6 +198,6 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   },
   bikeLocation: {
-    zIndex: 7,
+    zIndex: 3,
   }
 });
