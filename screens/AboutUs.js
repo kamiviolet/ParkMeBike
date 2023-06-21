@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image, Button } from "react-native";
+import { Text, View, StyleSheet, Image, Button, ScrollView } from "react-native";
 import { useState } from "react";
 import Pressable from "./Pressable";
 
@@ -12,6 +12,7 @@ export const AboutUs = (props, props2) => {
     setShouldShowText2(!shouldShowText2);
   };
   return (
+    <ScrollView>
     <View style={styles.container}>
       <Text style={styles.h1}>Welcome To Park Me Bike</Text>
       <Text style={styles.p}>
@@ -285,12 +286,14 @@ export const AboutUs = (props, props2) => {
         </Text>
       )}
     </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    backgroundColor: "#2196F3",
     alignItems: "center",
     justifyContent: "center",
     image: "cover",
@@ -310,22 +313,24 @@ const styles = StyleSheet.create({
     padding: 8,
     textAlign: "center",
     color: "white",
-    backgroundColor: "#2196F3",
+   
     borderRadius: 20,
     fontWeight: "bold",
   },
   pressableButton: {
     borderRadius: 10,
-    backgroundColor: "#2196F3",
+    backgroundColor: "white",
     marginTop: 20,
+    marginBottom: 20,
     padding: 8,
     textAlign: "center",
   },
   buttonText: {
     fontSize: 24,
-    color: "#fff",
+    color: "#2196F3",
     textAlign: "center",
     fontWeight: "bold",
+    borderStyle: 'dashed'
   },
   image: {
     width: 50,
