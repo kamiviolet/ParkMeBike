@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -27,7 +27,8 @@ export default function Mapframe({
   const [modalVisible, setModalVisible] = useState(false);
   const [destination, setDestination] = useState({
     latitude: null,
-    longitude: null
+    longitude: null,
+    distance: null
   })
   const [showRoute, setShowRoute] = useState(false)
   const [showTraffic, setShowTraffic] = useState(false)
@@ -37,6 +38,7 @@ export default function Mapframe({
     longitude: null,
     parked: false
   })
+  const map = useRef()
 
   async function playRachetBell(){
     console.log('Loading sound');
@@ -70,6 +72,7 @@ export default function Mapframe({
       // <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <MapView
+          ref={map}
           provider={PROVIDER_GOOGLE}
           style={styles.mapStyle}
           onRegionChangeComplete={(e) => {
@@ -77,6 +80,7 @@ export default function Mapframe({
               ...locationParams,
               location: { latitude: e.latitude, longitude: e.longitude },
             });
+
           }}
           showsScale={true}
           showsCompass={true}
@@ -84,6 +88,7 @@ export default function Mapframe({
           showsMyLocationButton={true}
           loadingEnabled={true}
           showsTraffic={showTraffic}
+
           // initialRegion={{
           //     latitudeDelta: 0.0922,
           //     longitudeDelta: 0.0421,
@@ -97,38 +102,33 @@ export default function Mapframe({
         >
           {
             pointsOfInterest.map(({properties, geometry}) => {
-                return <ParkingLots properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} isParked={isParked}setIsParked={setIsParked}/>
+
+                return <ParkingLots showRoute={showRoute} properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked}/>
             })
           }
           
 
               {
-              isParked.parked ?
-              <Marker
+              isParked.parked 
+              ? <Marker
               coordinate={{
                 latitude: isParked.latitude,
                 longitude: isParked.longitude,
               }}
               style={styles.bikeLocation}
-              pinColor='purple'
-              onCalloutPress={() => {
-                console.log(geometry.coordinates);
-              }}>
-              </Marker>: <></>
+              pinColor='purple' />
+              : <></>
               }
                     { 
                         showRoute && destination.latitude
-                      ? <>
-                      <MapViewDirections 
+                      ? <MapViewDirections 
                       origin={currLocation}
-                      destination={destination}
+                      destination={{latitude: destination.latitude, longitude: destination.longitude}}
                       apikey='AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4'
                       strokeWidth={4}
                       strokeColor='#111111'
-                      mode='BICYCLING'
-                      onReady={(result)=>{}}
+                      onReady={({distance})=>setDestination({...destination, distance: distance})}
                     /> 
-                      </>
                       :
                       <></>
                     }
@@ -164,6 +164,25 @@ export default function Mapframe({
         >
         <Icon size={35} name={'sliders'} style={styles.iconStyle}/>
         </Pressable>
+        {
+          destination.latitude && showRoute
+          ? <>
+          <View style={{position: 'absolute', width: 175, minheight: 50, backgroundColor: '#b4cfec', left: 25, bottom: 25, padding: 10 }}>
+            <Text style={{fontWeight: 800, paddingBottom: 10}}>Distance to Parking Lot:</Text>
+            <Text>{destination.distance} km</Text>
+          </View>
+          </>
+          : <></>
+          }
+          <Pressable style={isParked.parked? [styles.parkingButton, styles.abled]: [styles.parkingButton, styles.disabled] } disabled={isParked.parked? false: true}
+          onPress={() => {
+            map.current?.animateCamera({center:
+              {latitude: isParked.latitude, longitude: isParked.longitude}
+            }, 2000)
+          }}
+          >
+        <Icon size={35} name={'flag'} style={styles.iconStyle}/>
+        </Pressable>
       </View>
       // </SafeAreaView>
     );
@@ -198,6 +217,22 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   },
   bikeLocation: {
-    zIndex: 3,
+    zIndex: 7,
+  },
+  parkingButton: {
+    position: 'absolute',
+    bottom: 160,
+    right: 0,
+    margin: 15,
+    zIndex: 5,
+    padding: 10,
+    borderRadius: Dimensions.get('window').width * 0.5,
+  },
+  abled: {
+    backgroundColor: '#ffaf7a',
+  },
+  disabled: {
+    backgroundColor: '#666666',
+
   }
 });

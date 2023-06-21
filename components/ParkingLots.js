@@ -20,6 +20,7 @@ export default function ParkingLots({
   setDestination,
   setIsParked,
   isParked,
+  showRoute,
 }) {
   const [showPollution, setShowPollution] = useState(null);
 
@@ -29,13 +30,13 @@ export default function ParkingLots({
     bad: 'black',
   };
 
-  useEffect(() => {
-    fetchPollution(geometry.coordinates[1], geometry.coordinates[0]).then(
-      ({ list }) => {
-        setShowPollution(list[0].main.aqi);
-      }
-    );
-  }, [geometry]);
+  // useEffect(() => {
+  //   fetchPollution(geometry.coordinates[1], geometry.coordinates[0]).then(
+  //     ({ list }) => {
+  //       setShowPollution(list[0].main.aqi);
+  //     }
+  //   );
+  // }, [geometry]);
 
   const saveGeoLocation = () => {
 
@@ -129,21 +130,16 @@ export default function ParkingLots({
           longitude: geometry.coordinates[0],
         }}
         title={properties.name}
-        pinColor={
-          showPollution <= 2
-            ? AIRPOLLUTIONMARKER.good
-            : showPollution === 3
-            ? AIRPOLLUTIONMARKER.ok
-            : AIRPOLLUTIONMARKER.bad
-        }
-        onPress={(e) => {
-          setDestination(e.nativeEvent.coordinate);
-        }}
 
-        // onCalloutPress={() => {
-        //   console.log(geometry.coordinates);
-        //   saveGeoLocation();
-        // }}
+        // pinColor={
+        //   showPollution <= 2
+        //     ? AIRPOLLUTIONMARKER.good
+        //     : showPollution === 3
+        //     ? AIRPOLLUTIONMARKER.ok
+        //     : AIRPOLLUTIONMARKER.bad
+        // }
+        onPress={showRoute? (e) => setDestination({...destination, ...e.nativeEvent.coordinate}) : ()=>{}}
+//         onCalloutPress={() => saveGeoLocation()}
 
       >
         <Callout
