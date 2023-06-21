@@ -101,9 +101,6 @@ export default function Mapframe({
             })
           }
           
-              {<Marker
-                coordinate={currLocation}
-              /> }
               {
               isParked.parked ?
               <Marker
@@ -200,6 +197,6 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   },
   bikeLocation: {
-    zIndex: 7,
+    zIndex: 0,
   }
 });

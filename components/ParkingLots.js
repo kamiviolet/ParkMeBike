@@ -50,6 +50,16 @@ export default function ParkingLots({
       timestamp: serverTimestamp(),
     };
 
+    const getBackMyBike = () => {
+      setIsParked({
+        latitude: null,
+        longitude: null,
+        parked: false
+      });
+      console.log('You got your bike back!')
+      Alert.alert('You got your bike back!');
+    }
+
     const handleOkPress = () => {
       
       
@@ -79,13 +89,14 @@ export default function ParkingLots({
     };
   
     if(isParked.parked && isParked.latitude === geometry.coordinates[1]) {
-      setIsParked({
-        latitude: null,
-        longitude: null,
-        parked: false
-      });
-      console.log('You got your bike back!')
-      Alert.alert('You got your bike back!');
+      Alert.alert(
+        'Get your bike back?',
+        'Press OK to confirm' ,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Okay', onPress: getBackMyBike },
+        ])
+    
     } else if(!isParked.parked){
       console.log("thumbnail geo",geometry.coordinates)
       console.log("state geo", isParked)
