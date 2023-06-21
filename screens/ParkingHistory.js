@@ -4,6 +4,7 @@ import { db, collection, getDocs } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
 import * as Location from 'expo-location';
 import { ThemeContext } from '../providers/ThemeProvider';
+import { orderBy } from 'firebase/firestore';
 
 export const ParkingHistory = () => {
   const [parkingSpots, setParkingSpots] = useState([]);
