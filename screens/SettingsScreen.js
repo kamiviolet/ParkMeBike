@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, Button, Alert, Pressable } from 'react-native';
 import { auth, db } from '../config';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import { ThemeContext } from '../providers/ThemeProvider';
+import {Switch} from '@rneui/themed'
 
 const SettingsScreen = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [user, setUser] = useState(null);
+  const [toggle, setToggle] = useState(false)
 
   useEffect(() => {
     setUser(auth.currentUser);
@@ -66,8 +68,18 @@ const deleteAccount = async () => {
         backgroundColor: theme.background,
       }}
     >
-      <Text style={{ color: theme.text }}>Settings Screen</Text>
-      <Button title="Toggle Theme" onPress={toggleTheme} />
+      <Text style={{ color: theme.text, fontWeight: 'bold', fontSize: 30 }}>Settings</Text>
+      {/* <Pressable><Text style={styles.textStyle} onPress={toggleTheme}>Toggle Theme</Text></Pressable> */}
+      
+      <Text style={styles.textStyle}>Toggle Theme</Text>
+      <Switch
+        value={toggle}
+        onValueChange={()=> {
+          toggleTheme()
+          setToggle(!toggle)}
+        }
+      />
+     
       <Text style={styles.textStyle} onPress={handleLogout}>
         Sign Out
       </Text>
