@@ -50,6 +50,7 @@ export default function ParkingLots({
       timestamp: serverTimestamp(),
     };
 
+
     const getBackMyBike = () => {
       setIsParked({
         latitude: null,
@@ -60,9 +61,12 @@ export default function ParkingLots({
       Alert.alert('You got your bike back!');
     }
 
+  
+      
+      
+
     const handleOkPress = () => {
-      
-      
+
       // Save bikeLocation
       setDoc(userBikeGeoRef, locationData)
         .then(() => {
@@ -85,6 +89,7 @@ export default function ParkingLots({
         .catch((error) => {
           console.log('Error saving parking spot:', error);
         });
+
       
     };
   
@@ -112,7 +117,6 @@ export default function ParkingLots({
       Alert.alert(
         'You parked your bike already!')
     }
-
   };
 
   
@@ -135,10 +139,12 @@ export default function ParkingLots({
         onPress={(e) => {
           setDestination(e.nativeEvent.coordinate);
         }}
+
         // onCalloutPress={() => {
         //   console.log(geometry.coordinates);
         //   saveGeoLocation();
         // }}
+
       >
         <Callout
           onPress={() => {
