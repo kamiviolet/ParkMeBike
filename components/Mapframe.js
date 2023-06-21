@@ -197,6 +197,6 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   },
   bikeLocation: {
-    zIndex: 0,
+    zIndex: 3,
   }
 });
