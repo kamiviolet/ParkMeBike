@@ -188,11 +188,9 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: 200,
     height: 200,
-    borderRadius: 10,
   },
   callout: {
     borderColor: "blue",
-    borderRadius: 10,
     overFlow: "hidden",
     color: "white",
   },
@@ -201,12 +199,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    borderRadius: 10,
   },
   parkBike: {
     backgroundColor: "#2196F3",
     fontWeight: "bold",
     textAlign: "center",
-    borderRadius: 10,
   },
 });
