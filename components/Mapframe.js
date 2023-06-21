@@ -103,11 +103,13 @@ export default function Mapframe({
           {
             pointsOfInterest.map(({properties, geometry}) => {
 
+
                 return <ParkingLots showRoute={showRoute} properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked} isParked={isParked}/>
+
             })
           }
           
-
+{/* 
               {
               isParked.parked 
               ? <Marker
@@ -118,7 +120,7 @@ export default function Mapframe({
               style={styles.bikeLocation}
               pinColor='purple' />
               : <></>
-              }
+              } */}
                     { 
                         showRoute && destination.latitude
                       ? <MapViewDirections 
@@ -178,7 +180,7 @@ export default function Mapframe({
           <Pressable style={isParked.parked? [styles.parkingButton, styles.abled]: [styles.parkingButton, styles.disabled] } disabled={isParked.parked? false: true}
           onPress={() => {
             map.current?.animateCamera({center:
-              {latitude: isParked.latitude, longitude: isParked.longitude}
+              {latitude: isParked.latitude, longitude: isParked.longitude}, zoom: 15
             }, 2000)
           }}
           >
