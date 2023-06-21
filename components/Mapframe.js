@@ -103,7 +103,7 @@ export default function Mapframe({
           {
             pointsOfInterest.map(({properties, geometry}) => {
 
-                return <ParkingLots showRoute={showRoute} properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked}/>
+                return <ParkingLots showRoute={showRoute} properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked} isParked={isParked}/>
             })
           }
           
@@ -128,6 +128,7 @@ export default function Mapframe({
                       strokeWidth={4}
                       strokeColor='#111111'
                       onReady={({distance})=>setDestination({...destination, distance: distance})}
+                      
                     /> 
                       :
                       <></>
