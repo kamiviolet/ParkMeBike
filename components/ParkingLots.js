@@ -99,10 +99,7 @@ export default function ParkingLots({
         .catch((error) => {
           console.log('Error saving parking spot:', error);
         });
-
-      
     };
-  
     if(isParked.parked && isParked.latitude === geometry.coordinates[1]) {
       Alert.alert(
         'Get your bike back?',
@@ -128,13 +125,11 @@ export default function ParkingLots({
         'You parked your bike already!')
     }
   };
-
-  
-
   return (
     <>
       <Marker
-      ref={marker}
+        style={styles.callout}
+        ref={marker}
         coordinate={{
           latitude: geometry.coordinates[1],
           longitude: geometry.coordinates[0],
@@ -147,11 +142,16 @@ export default function ParkingLots({
         //     ? AIRPOLLUTIONMARKER.ok
         //     : AIRPOLLUTIONMARKER.bad
         // }
-        onPress={showRoute? (e) => setDestination({...destination, ...e.nativeEvent.coordinate}) : ()=>{}}
-//         onCalloutPress={() => saveGeoLocation()}
-
+        onPress={
+          showRoute
+            ? (e) =>
+                setDestination({ ...destination, ...e.nativeEvent.coordinate })
+            : () => {}
+        }
+        //         onCalloutPress={() => saveGeoLocation()}
       >
         <Callout
+          style={styles.callout}
           onPress={() => {
             console.log(geometry.coordinates);
             saveGeoLocation();
@@ -161,11 +161,11 @@ export default function ParkingLots({
           isParked?.longitude === geometry.coordinates[0] ? (
             <Text style={styles.getBike}>Get My Bike</Text>
           ) : (
-            <Text style={styles.parkBike}>Park Here</Text>
+              <Text style={styles.parkBike}>Park Here
+              </Text>
           )}
-          <View>
-            {Platform.OS === 'ios' ? (
-              <Image
+            {Platform.OS === "ios" ? (
+              <Image 
                 style={styles.thumbnail}
                 source={{
                   uri: `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
@@ -173,13 +173,11 @@ export default function ParkingLots({
               />
             ) : (
               <WebView
-                style={styles.thumbnail}
                 source={{
                   uri: `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
                 }}
               />
             )}
-          </View>
         </Callout>
       </Marker>
     </>
@@ -190,16 +188,25 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: 200,
     height: 200,
+    borderRadius: 10,
+  },
+  callout: {
+    borderColor: "blue",
+    borderRadius: 10,
+    overFlow: "hidden",
+    color: "white",
   },
   getBike: {
     backgroundColor: "#2196F3",
-    fontWeight: 'bold',
-    textAlign: 'center'
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "white",
+    borderRadius: 10,
   },
   parkBike: {
     backgroundColor: "#2196F3",
-    fontWeight: 'bold',
-    textAlign: 'center'
-  }
-
+    fontWeight: "bold",
+    textAlign: "center",
+    borderRadius: 10,
+  },
 });
