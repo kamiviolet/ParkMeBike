@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ import { db } from '../config';
 import { auth } from '../config';
 import { FontAwesome } from '@expo/vector-icons';
 import ParkingHistory from './ParkingHistory';
+import { ThemeContext } from '../providers/ThemeProvider';
 
 const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
@@ -68,6 +69,7 @@ const uploadBikeImageAsync = (uri) => {
 };
 
 export const UserProfile = ({ userId, navigation }) => {
+  const { theme } = useContext(ThemeContext);
   console.log(navigation);
   const [user, setUser] = useState(null);
   const [newName, setNewName] = useState('');
@@ -190,6 +192,7 @@ export const UserProfile = ({ userId, navigation }) => {
   const goToHistoryScreen = () => {
     navigation.navigate('ParkingHistory');
   };
+ 
 
   if (!user) {
     return (
@@ -200,7 +203,7 @@ export const UserProfile = ({ userId, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.profilePictureContainer}>
         {newProfileImage ? (
           <Image
@@ -222,7 +225,7 @@ export const UserProfile = ({ userId, navigation }) => {
         <UploadImageIcon onPress={handleProfileImageUpload} />
       </View>
 
-      <Text style={styles.inputLabel}>Username</Text>
+      <Text style={[styles.inputLabel, { color: theme.text }]}>Username</Text>
       <View style={styles.inputContainer}>
         <TextInput
           value={user.username}
@@ -230,7 +233,9 @@ export const UserProfile = ({ userId, navigation }) => {
           style={styles.input}
         />
       </View>
-      <Text style={styles.inputLabel}>Email address</Text>
+      <Text style={[styles.inputLabel, { color: theme.text }]}>
+        Email address
+      </Text>
       <View style={styles.inputContainer}>
         <TextInput value={user.email} editable={false} style={styles.input} />
       </View>
@@ -238,14 +243,50 @@ export const UserProfile = ({ userId, navigation }) => {
         onPress={() => navigation.navigate('ChangeEmail', { userId })}
         style={styles.changeEmailLink}
       >
-        Change Email
+         Change Email
       </Text>
 
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={goToHistoryScreen}>
-          <Text style={styles.buttonText}>History</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.buttonContainer}>
+  <TouchableOpacity
+    style={[styles.button, { backgroundColor: theme.primary }]}
+    onPress={goToHistoryScreen}
+  >
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <FontAwesome name="history" size={20} color={theme.mode === 'dark' ? 'black' : 'white'} />
+      <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+        View your recent history
+      </Text>
+    </View>
+  </TouchableOpacity>
+</View>
+
+<View style={styles.buttonContainer}>
+  <TouchableOpacity 
+    style={[styles.button, {backgroundColor: theme.primary}]} 
+    onPress={() => setModalVisible(true)}
+  >
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <FontAwesome name="camera" size={20} color={theme.mode === 'dark' ? 'black' : 'white'} />
+      <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+        Take Bike Image
+      </Text>
+    </View>
+  </TouchableOpacity>
+</View>
+
+<View style={styles.buttonContainer}>
+  <TouchableOpacity 
+    style={[styles.button, {backgroundColor: theme.primary}]} 
+    onPress={handleSave}
+  >
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <FontAwesome name="save" size={20} color={theme.mode === 'dark' ? 'black' : 'white'} />
+      <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+        Save Changes
+      </Text>
+    </View>
+  </TouchableOpacity>
+</View>
 
       <Modal
         animationType="slide"
@@ -285,11 +326,11 @@ export const UserProfile = ({ userId, navigation }) => {
       </Modal>
 
       <Text style={styles.textStyle} onPress={() => setModalVisible(true)}>
-        Take Bike Image
+        
       </Text>
 
       <Text style={styles.textStyle} onPress={handleSave}>
-        Save Changes
+        
       </Text>
     </View>
   );
@@ -305,7 +346,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   profilePictureContainer: {
-    marginBottom: 10,
+    marginTop: 50,
   },
   profileImage: {
     width: 125,
@@ -328,21 +369,37 @@ const styles = StyleSheet.create({
     height: 200,
   },
 
+  buttonContainer: {
+    marginTop: 30,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   button: {
-    backgroundColor: '#2196f3',
+    backgroundColor: '#2196F3',
     paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginBottom: 10,
+    paddingHorizontal: 30,
+    borderRadius: 4,
+    width: '90%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.14,
+    shadowRadius: 6.27,
+    elevation: 0.8,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: '600',
   },
   input: {
     height: 50,
     width: 300,
+   
     margin: 5,
     padding: 10,
     borderRadius: 10,

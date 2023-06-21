@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { db, collection, getDocs, addDoc, doc } from '../config/firebase';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { db, collection, getDocs } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
 import * as Location from 'expo-location';
+import { ThemeContext } from '../providers/ThemeProvider';
+import { orderBy } from 'firebase/firestore';
 
 export const ParkingHistory = () => {
   const [parkingSpots, setParkingSpots] = useState([]);
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   const auth = getAuth();
   const userId = auth.currentUser ? auth.currentUser.uid : null;
@@ -15,16 +18,23 @@ export const ParkingHistory = () => {
       return;
     }
 
-    const collectionRef = collection(
-      db,
-      `users/${userId}/favourite-parking-spots`
-    );
+    const collectionRef = collection(db, `users/${userId}/parkingHistory`);
 
     getDocs(collectionRef)
       .then((querySnapshot) => {
         const spots = querySnapshot.docs.map((doc) => {
           return { id: doc.id, ...doc.data() };
         });
+        return spots;
+      })
+      .then(async (spots) => {
+        for (let spot of spots) {
+          const address = await Location.reverseGeocodeAsync({
+            latitude: spot.latitude,
+            longitude: spot.longitude,
+          });
+          spot.address = `${address[0].street}, ${address[0].city}, ${address[0].postalCode}`;
+        }
         setParkingSpots(spots);
       })
       .catch((error) => {
@@ -32,43 +42,13 @@ export const ParkingHistory = () => {
       });
   }, [userId]);
 
-  const handleSaveParkingSpot = () => {
-    if (!userId) {
-      console.log('No user is logged in');
-      return;
-    }
-
-    // We will need to replace these values with actual map data!
-
-    const parkingSpot = {
-      name: 'Lovely spot to grab a snack!',
-      latitude: 12.345,
-      longitude: 67.89,
-    };
-
-    addDoc(collection(db, `users/${userId}/favourite-parking-spots`), {
-      name: parkingSpot.name,
-      latitude: parkingSpot.latitude,
-      longitude: parkingSpot.longitude,
-    })
-      .then((parkingSpotRef) => {
-        console.log('Parking spot saved with ID:', parkingSpotRef.id);
-      })
-      .catch((error) => {
-        console.log('Error saving parking spot:', error);
-      });
-  };
-
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, backgroundColor: theme.background }}>
       {parkingSpots.map((spot) => (
         <View key={spot.id} style={styles.spotContainer}>
-          <Text style={styles.spotName}>{spot.name}</Text>
-          <Text>Latitude: {spot.latitude}</Text>
-          <Text>Longitude: {spot.longitude}</Text>
+          <Text>{spot.address}</Text>
         </View>
       ))}
-      <Button onPress={handleSaveParkingSpot} title="Save Parking Spot!" />
     </View>
   );
 };
@@ -76,7 +56,6 @@ export const ParkingHistory = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 20,
   },
   spotContainer: {
@@ -84,11 +63,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,
-  },
-  spotName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
   },
 });
 

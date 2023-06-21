@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { useContext } from 'react';
 import { AuthenticatedUserContext } from '../providers';
 import ParkingHistory from '../screens/ParkingHistory';
+import { ThemeContext } from '../providers/ThemeProvider';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +21,9 @@ const UserProfileWithAuth = ({navigation}) => {
   return <UserProfile userId={user.uid} navigation={navigation} />;
 };
 
-const TabNavigator = () => (
+const TabNavigator = () => {
+  const {theme, toggleTheme} = useContext(ThemeContext)
+  return(
   <Tab.Navigator
     initialRouteName="Dashboard"
     screenOptions={({ route }) => ({
@@ -42,18 +45,19 @@ const TabNavigator = () => (
 
         return <Ionicons name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: 'white',
+      tabBarActiveTintColor: theme.primary,
       tabBarInactiveTintColor: 'gray',
       tabBarStyle: {
-        backgroundColor: '#000000',
+        backgroundColor: theme.background,
         height: 60,
       },
       tabBarLabelStyle: {
         marginBottom: 0,
-        color: 'white',
+        color: theme.text,
         fontSize: 12,
       },
       tabBarIconStyle: {
+        color: theme.text,
         marginTop: 0,
       },
     })}
@@ -63,6 +67,7 @@ const TabNavigator = () => (
     <Tab.Screen name="Settings" component={SettingsScreen} />
     <Tab.Screen name="About" component={AboutUs} />
   </Tab.Navigator>
-);
+  )
+};
 
 export default TabNavigator;
