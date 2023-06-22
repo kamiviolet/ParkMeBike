@@ -133,7 +133,6 @@ export default function ParkingLots({
   return (
     <>
       <Marker
-        style={styles.callout}
         ref={marker}
         coordinate={{
           latitude: geometry.coordinates[1],
@@ -153,29 +152,26 @@ export default function ParkingLots({
                 setDestination({ ...destination, ...e.nativeEvent.coordinate })
             : () => {}
         }
-        //         onCalloutPress={() => saveGeoLocation()}
       >
         <Callout
           style={styles.callout}
           onPress={() => {
-            console.log(geometry.coordinates);
             saveGeoLocation();
           }}
         >
-          
             <Text style={styles.getBike}>{calloutText}</Text>
-          
             {Platform.OS === "ios" ? (
               <Image 
                 style={styles.thumbnail}
                 source={{
-                  uri: `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
+                  uri: `https://maps.googleapis.com/maps/api/streetview?size=350x400&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
                 }}
               />
             ) : (
               <WebView
+              style={styles.thumbnail}
                 source={{
-                  uri: `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
+                  uri: `https://maps.googleapis.com/maps/api/streetview?size=350x400&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
                 }}
               />
             )}
@@ -187,13 +183,15 @@ export default function ParkingLots({
 
 const styles = StyleSheet.create({
   thumbnail: {
-    width: 200,
+    width: 250,
     height: 200,
   },
   callout: {
     borderColor: "blue",
     overFlow: "hidden",
     color: "white",
+    width: 250,
+    height: 200,
   },
   getBike: {
     backgroundColor: "#2196F3",
