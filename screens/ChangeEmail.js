@@ -1,5 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { Text, View, TextInput, Button } from 'react-native';
+import {
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { doc, updateDoc, collection } from 'firebase/firestore';
 import { db } from '../config';
 import { ThemeContext } from '../providers/ThemeProvider';
@@ -20,8 +26,17 @@ export const ChangeEmail = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: theme.background }}>
-      <Text style={{ fontSize: 16, marginBottom: 10, color: theme.text }}>Enter new email:</Text>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        padding: 20,
+        backgroundColor: theme.background,
+      }}
+    >
+      <Text style={{ fontSize: 16, marginBottom: 10, color: theme.text }}>
+        Enter new email:
+      </Text>
       <TextInput
         value={newEmail}
         onChangeText={setNewEmail}
@@ -31,14 +46,30 @@ export const ChangeEmail = ({ route, navigation }) => {
           borderWidth: 1,
           borderRadius: 10,
           marginBottom: 10,
-          color: theme.text,
-
-          
+          paddingLeft: 10,
           backgroundColor: theme.isLight ? 'grey' : 'white',
+          color: 'black',
         }}
       />
-      <Button title="Save" onPress={handleSave} />
-      
+      <TouchableOpacity
+        onPress={handleSave}
+        style={[styles.button, { backgroundColor: theme.primary }]}
+      >
+        <Text style={styles.buttonText}>Save</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+});
