@@ -183,14 +183,15 @@ export default function ParkingLots({
 
 const styles = StyleSheet.create({
   thumbnail: {
-    width: 250,
-    height: 200,
+   width: '100%',
+   height: '80%'
   },
   callout: {
     borderColor: "blue",
-    overFlow: "hidden",
+    overflow: "hidden",
     color: "white",
-    width: 250,
+    padding: 5,
+    width: 220,
     height: 200,
   },
   getBike: {
@@ -198,11 +199,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
+    paddingVertical: 10,
+    marginBottom: 2
   },
   parkBike: {
     backgroundColor: "#2196F3",
     fontWeight: "bold",
     textAlign: "center",
-    color: 'white'
+    color: 'white',
+    marginBottom: 2
+
   },
 });
