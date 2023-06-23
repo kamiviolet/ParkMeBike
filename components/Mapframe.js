@@ -5,7 +5,8 @@ import {
   View,
   Pressable,
   Modal,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions'
@@ -84,12 +85,15 @@ export default function Mapframe({
           showsMyLocationButton={true}
           loadingEnabled={true}
           showsTraffic={showTraffic}
-          initialCamera={{
-            latitude: locationParams.location.latitude,
-            longitude: locationParams.location.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
+          initialCamera={
+            (Platform.OS === 'ios') 
+            ? {
+              latitude: currLocation.latitude,
+              longitude: currLocation.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }
+            : null}
         >
           {
             pointsOfInterest.map(({properties, geometry}) => {
@@ -151,10 +155,10 @@ export default function Mapframe({
         {
           destination.latitude && showRoute
           ? <>
-          <View style={{position: 'absolute', width: 175, minheight: 50, backgroundColor: '#b4cfec', left: 25, bottom: 25, padding: 10 }}>
-            <Text style={{fontWeight: 800, paddingBottom: 10}}>Distance to Parking Lot:</Text>
-            <Text>{destination.distance} km</Text>
-          </View>
+            <View style={{position: 'absolute', width: 175, minheight: 50, backgroundColor: '#b4cfec', left: 25, bottom: 25, padding: 10 }}>
+              <Text style={{fontWeight: 800, paddingBottom: 10}}>Distance to Parking Lot:</Text>
+              <Text>{destination.distance} km</Text>
+            </View>
           </>
           : <></>
         }
