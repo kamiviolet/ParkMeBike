@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import { Theme } from '../config/theme';
 
 export const ThemeContext = createContext();

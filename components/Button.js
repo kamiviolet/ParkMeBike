@@ -1,16 +1,15 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Pressable, Text, StyleSheet } from 'react-native';
-
 import { Colors } from '../config';
 
-export default Button = ({
+export default function Button ({
   children,
   onPress,
   activeOpacity = 0.3,
   borderless = false,
   title,
   style,
-}) => {
+}) {
   const _style = useCallback(({ pressed }) => [
     style,
     { opacity: pressed ? activeOpacity : 1 },

@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import * as Location from 'expo-location';
 import { Mapframe, LoadingIndicator } from '../components';
 
-
 export function Dashboard() {
   const [currLocation, setCurrLocation] = useState({});
   const [locationParams, setLocationParams] = useState({
