@@ -77,7 +77,6 @@ export default function Mapframe({
               ...locationParams,
               location: { latitude: e.latitude, longitude: e.longitude },
             });
-
           }}
           showsScale={true}
           showsCompass={true}
@@ -85,42 +84,39 @@ export default function Mapframe({
           showsMyLocationButton={true}
           loadingEnabled={true}
           showsTraffic={showTraffic}
-
-          // initialRegion={{
-          //     latitudeDelta: 0.0922,
-          //     longitudeDelta: 0.0421,
-          // }}
-          // initialCamera={{
-          //     latitude: locationParams.location.latitude,
-          //     longitude: locationParams.location.longitude,
-          //     latitudeDelta: 0.1,
-          //     longitudeDelta: 0.1
-          // }}
+          initialCamera={{
+            latitude: locationParams.location.latitude,
+            longitude: locationParams.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
         >
           {
             pointsOfInterest.map(({properties, geometry}) => {
-
-
-                return <ParkingLots showRoute={showRoute} properties={properties} geometry={geometry} key={properties.id} destination={destination} setDestination={setDestination} setIsParked={setIsParked} isParked={isParked}/>
-
+                return <ParkingLots
+                  showRoute={showRoute}
+                  properties={properties}
+                  geometry={geometry}
+                  key={properties.id}
+                  destination={destination}
+                  setDestination={setDestination}
+                  setIsParked={setIsParked}
+                  isParked={isParked}
+                />
             })
           }
-          
-                    { 
-                        showRoute && destination.latitude
-                      ? <MapViewDirections 
-                      origin={currLocation}
-                      destination={{latitude: destination.latitude, longitude: destination.longitude}}
-                      apikey='AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4'
-                      strokeWidth={4}
-                      strokeColor='#111111'
-                      onReady={({distance})=>setDestination({...destination, distance: distance})}
-                      
-                    /> 
-                      :
-                      <></>
-                    }
-                  
+          { 
+            showRoute && destination.latitude
+            ? <MapViewDirections 
+              origin={currLocation}
+              destination={{latitude: destination.latitude, longitude: destination.longitude}}
+              apikey={process.env.GOOGLE_API}
+              strokeWidth={4}
+              strokeColor='#111111'
+              onReady={({distance})=>setDestination({...destination, distance: distance})}
+            /> 
+            :<></>
+          }
         </MapView>
         <Modal
           animationType="slide"
@@ -161,14 +157,13 @@ export default function Mapframe({
           </View>
           </>
           : <></>
-          }
-          <Pressable style={isParked.parked? [styles.parkingButton, styles.abled]: [styles.parkingButton, styles.disabled] } disabled={isParked.parked? false: true}
+        }
+        <Pressable style={isParked.parked? [styles.parkingButton, styles.abled]: [styles.parkingButton, styles.disabled] } disabled={isParked.parked? false: true}
           onPress={() => {
-            map.current?.animateCamera({center:
-              {latitude: isParked.latitude, longitude: isParked.longitude}, zoom: 15
-            }, 2000)
-          }}
-          >
+          map.current?.animateCamera({center:
+          {latitude: isParked.latitude, longitude: isParked.longitude}, zoom: 15
+          }, 2000)}}
+        >
         <Icon size={35} name={'flag'} style={styles.iconStyle}/>
         </Pressable>
       </View>
