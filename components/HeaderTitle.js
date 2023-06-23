@@ -3,16 +3,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function HeaderTitle({theme}) {
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Ionicons name="bicycle" size={28}  color={theme.text}/>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            fontSize: 20,
-            marginLeft: 10,
-            color: theme.text
-          }}
-        >
+      <View className="flex-row items-center">
+        <Ionicons name="bicycle" size={28} color={theme.text}/>
+        <Text className="font-bold text-lg ms-10 text-black">
           Park Me Bike
         </Text>
       </View>

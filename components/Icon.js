@@ -10,5 +10,3 @@ export default function Icon({ name, size, color, style }) {
     />
   );
 };
-
-<MaterialCommunityIcons name="bicycle" size={24} color="black" />;

@@ -1,12 +1,5 @@
 import { Image, StyleSheet } from 'react-native';
 
 export default function Logo ({ uri }) {
-  return <Image source={uri} style={styles.image} />;
+  return <Image source={uri} className="w-200 h-200" />;
 };
-
-const styles = StyleSheet.create({
-  image: {
-    width: 200,
-    height: 200
-  }
-});

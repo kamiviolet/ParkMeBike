@@ -33,8 +33,16 @@ export default function ControlPanel ({
 
   return (
     <>
-      <View style={theme.name === 'light' ? styles.sliderLightWrapper : styles.sliderDarkWrapper}>
-        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>
+      <View style={
+        theme.name === 'light'
+        ? styles.sliderLightWrapper
+        : styles.sliderDarkWrapper
+      }>
+        <Text style={
+          theme.name === 'light'
+          ? styles.lightHeading
+          : styles.darkHeading}
+        >
           Radius: {locationParams.radius} km
         </Text>
         <Slider
@@ -60,7 +68,11 @@ export default function ControlPanel ({
           }}
           onSlidingComplete={(e) => setLocationParams({ ...locationParams, radius: e })}
         />
-        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>
+        <Text style={
+          theme.name === 'light'
+          ? styles.lightHeading
+          : styles.darkHeading}
+        >
           Bike Parks: {parkingLimit}
         </Text>
         <Slider

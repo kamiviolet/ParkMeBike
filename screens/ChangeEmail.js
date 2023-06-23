@@ -18,22 +18,12 @@ export const ChangeEmail = ({ route, navigation }) => {
   const handleSave = () => {
     const userDocRef = doc(collection(db, 'users'), userId);
     updateDoc(userDocRef, { email: newEmail })
-      .then(() => {
-        console.log('User email updated!');
-        navigation.goBack();
-      })
+      .then(() => navigation.goBack())
       .catch((error) => console.log('Error updating user email!: ', error));
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-        backgroundColor: theme.background,
-      }}
-    >
+    <View className="flex-1 justify-center p-20 bg-white">
       <Text style={{ fontSize: 16, marginBottom: 10, color: theme.text }}>
         Enter new email:
       </Text>
