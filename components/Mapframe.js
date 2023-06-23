@@ -39,6 +39,7 @@ export default function Mapframe({
   })
   const map = useRef()
 
+
   async function playRachetBell(){
     console.log('Loading sound');
     const {ratchetBellSound} = await Audio.Sound.createAsync(require('../assets/bellcutup.mp3'), 
@@ -114,7 +115,7 @@ export default function Mapframe({
             ? <MapViewDirections 
               origin={currLocation}
               destination={{latitude: destination.latitude, longitude: destination.longitude}}
-              apikey={process.env.GOOGLE_API}
+              apikey='AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4'
               strokeWidth={4}
               strokeColor='#111111'
               onReady={({distance})=>setDestination({...destination, distance: distance})}

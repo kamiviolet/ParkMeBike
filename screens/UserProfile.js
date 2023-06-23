@@ -171,7 +171,7 @@ export const UserProfile = ({ userId, navigation }) => {
   const UploadImageIcon = ({ onPress }) => (
     <Pressable
       onPress={onPress}
-      style={styles.uploadImageIconContainer}
+      className='absolute bottom-35 right-0 bg-white rounded p-5'
     >
       <FontAwesome name="camera" size={20} color="gray" />
     </Pressable>
@@ -183,34 +183,34 @@ export const UserProfile = ({ userId, navigation }) => {
  
   if (!user) {
     return (
-      <View className="
-        bg-white,
-        place-items-center">
-        <Text>Loading user profile...</Text>
+      <View className="bg-white">
+        <Text className="text-blue-700 font-bold text-xs p-10 text-center">Loading user profile...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView 
-      showsVerticalScrollIndicator={true}
-    >
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.profilePictureContainer}>
+    <ScrollView showsVerticalScrollIndicator={true}>
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
+      <View>
         {newProfileImage ? (
           <Image
             source={{ uri: newProfileImage }}
-            style={styles.profileImage}
+            className='rounded-full border-3 border-white mb-3'
+            style={{width: 250, height: 250}}
           />
         ) : user && user.profileImage ? (
           <Image
             source={{ uri: user.profileImage }}
-            style={styles.profileImage}
+            className='rounded-full border-3 border-white mb-3'
+            style={{width: 250, height: 250}}
+
           />
         ) : (
           <Image
             source={require('../assets/profile-placeholder.png')}
-            style={styles.profileImage}
+            className="w-25 h-25 rounded-full border-3 border-white mb-3"
+            style={{width: 250, height: 250}}
           />
         )}
         <UploadImageIcon onPress={handleProfileImageUpload} />
@@ -313,7 +313,7 @@ export const UserProfile = ({ userId, navigation }) => {
             </Text>
 
             <Text
-              style={styles.textStyle}
+              className='text-blue-700 font-bold text-xs p-10 text-center'
               onPress={() => setModalVisible(!modalVisible)}
             >
               Close
@@ -321,13 +321,12 @@ export const UserProfile = ({ userId, navigation }) => {
           </View>
         </View>
       </Modal>
-
-      <Text style={styles.textStyle} onPress={() => setModalVisible(true)}>
-        
+      <Text
+        className='text-blue-700 font-bold text-xs p-10 text-center'
+        onPress={() => setModalVisible(true)}
+      >
       </Text>
-
-      <Text style={styles.textStyle} onPress={handleSave}>
-        
+      <Text className='text-blue-700 font-bold text-xs p-10 text-center' onPress={handleSave}>
       </Text>
     </View>
     </ScrollView>
@@ -337,24 +336,7 @@ export const UserProfile = ({ userId, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-  },
-  profilePictureContainer: {
-    marginTop: 50,
-  },
-  profileImage: {
-    width: 125,
-    height: 125,
-    borderRadius: 75,
-    marginBottom: 30,
-    borderColor: '#fff',
-    borderWidth: 3,
-  },
-  textStyle: {
-    color: '#2196f3',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 10,
+    alignItems: 'center'
   },
   bikeImage: {
     width: 200,
@@ -414,14 +396,6 @@ const styles = StyleSheet.create({
     marginLeft: 26,
     alignSelf: 'flex-start',
     fontSize: 14,
-  },
-  uploadImageIconContainer: {
-    position: 'absolute',
-    bottom: 35,
-    right: 0,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 5,
   },
   centeredView: {
     flex: 1,
