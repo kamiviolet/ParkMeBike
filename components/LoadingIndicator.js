@@ -1,10 +1,8 @@
-import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
-
 import { Colors } from '../config';
-import { View } from './View';
+import View from './View';
 
-export const LoadingIndicator = () => {
+export default function LoadingIndicator() {
   return (
     <View style={styles.container}>
       <ActivityIndicator size='large' color={Colors.orange} />

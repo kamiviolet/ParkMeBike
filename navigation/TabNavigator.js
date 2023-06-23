@@ -1,28 +1,24 @@
-import { AboutUs, UserProfile } from '../screens';
-import SettingsScreen from '../screens/SettingsScreen';
-import Dashboard from '../screens/Dashboard';
+import { useContext } from 'react';
+import { AboutUs, UserProfile, SettingsScreen, Dashboard } from '../screens';
+import { AuthenticatedUserContext, ThemeContext } from '../providers';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useContext } from 'react';
-import { AuthenticatedUserContext } from '../providers';
-import ParkingHistory from '../screens/ParkingHistory';
-import { ThemeContext } from '../providers/ThemeProvider';
 
 const Tab = createBottomTabNavigator();
 
-//gets the user ID and renders UserProfile with it
 const UserProfileWithAuth = ({navigation}) => {
   const { user } = useContext(AuthenticatedUserContext);
 
   if (!user) {
-    return null; //loading indicator
-  }
-
-  return <UserProfile userId={user.uid} navigation={navigation} />;
+    return null    
+  } else {
+    return <UserProfile userId={user.uid} navigation={navigation} />
+  };
 };
 
-const TabNavigator = () => {
+export const TabNavigator = () => {
   const {theme, toggleTheme} = useContext(ThemeContext)
+
   return(
   <Tab.Navigator
     initialRouteName="Dashboard"
@@ -69,5 +65,3 @@ const TabNavigator = () => {
   </Tab.Navigator>
   )
 };
-
-export default TabNavigator;

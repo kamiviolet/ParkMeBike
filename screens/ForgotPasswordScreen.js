@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Formik } from 'formik';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { Pressable } from 'react-native';
 import { passwordResetSchema } from '../utils';
 import { Colors, auth } from '../config';
 import { View, TextInput, Button, FormErrorMessage } from '../components';
@@ -12,7 +11,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
 
   const handleSendPasswordResetEmail = (values) => {
     const { email } = values;
-
+    console.log(values)
     sendPasswordResetEmail(auth, email)
       .then(() => {
         console.log('Success: Password Reset Email sent.');
@@ -40,8 +39,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
           handleBlur
         }) => (
           <>
-            {/* Email input field */}
-            <TextInput
+             <TextInput
               name='email'
               leftIconName='email'
               placeholder='Enter email'
@@ -53,18 +51,17 @@ export const ForgotPasswordScreen = ({ navigation }) => {
               onBlur={handleBlur('email')}
             />
             <FormErrorMessage error={errors.email} visible={touched.email} />
-            {/* Display Screen Error Mesages */}
-            {errorState !== '' ? (
-              <FormErrorMessage error={errorState} visible={true} />
-            ) : null}
-            {/* Password Reset Send Email  button */}
+              {
+              errorState !== ''
+              ? <FormErrorMessage error={errorState} visible={true} />
+              : null
+              }
             <Button style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Send Reset Email</Text>
-            </Button>
+            </Button> 
           </>
         )}
       </Formik>
-      {/* Button to navigate to Login screen */}
       <Button
         style={styles.borderlessButtonContainer}
         borderless

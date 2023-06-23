@@ -1,5 +1,5 @@
 import { Images } from './images';
-import { Colors } from './theme';
+import { Colors, Theme } from './theme';
 import {
   auth,
   db,
@@ -14,6 +14,7 @@ import {
 export {
   Images,
   Colors,
+  Theme,
   auth,
   db,
   storage,

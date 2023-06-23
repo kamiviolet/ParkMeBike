@@ -1,18 +1,17 @@
 import React from 'react';
 import { TextInput as RNTextInput } from 'react-native';
-
-import { View } from './View';
-import { Icon } from './Icon';
-import { Button } from './Button';
+import View from './View';
+import Icon from './Icon';
+import Button from './Button';
 import { Colors } from '../config';
 
-export const TextInput = ({
+export default function TextInput ({
   width = '100%',
   leftIconName,
   rightIcon,
   handlePasswordVisibility,
   ...otherProps
-}) => {
+}) {
   return (
     <View
       style={{

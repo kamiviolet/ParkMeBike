@@ -5,34 +5,27 @@ import {
   Image,
   StyleSheet,
   TextInput,
-  Button,
   Pressable,
   Modal,
   Alert,
   TouchableOpacity,
+  ScrollView
 } from 'react-native';
 import {
   collection,
   doc,
   getDoc,
   updateDoc,
-  deleteDoc,
 } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import uuid from 'uuid';
 import { db } from '../config';
-import { auth } from '../config';
 import { FontAwesome } from '@expo/vector-icons';
-import ParkingHistory from './ParkingHistory';
-import { ThemeContext } from '../providers/ThemeProvider';
-
-import { ScrollView } from 'react-native';
-
+import { ThemeContext } from '../providers';
+import uuid from 'uuid';
 
 const uriToBlob = (uri) => {
   return new Promise((resolve, reject) => {
-    //returns a promise that resolves with blob object, make http requests in js
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
       resolve(xhr.response);
@@ -42,28 +35,26 @@ const uriToBlob = (uri) => {
     };
     xhr.responseType = 'blob';
     xhr.open('GET', uri, true); //
-    xhr.send(null); //set to null GET requests don't have body
+    xhr.send(null); 
   });
 };
 
 const uploadImageAsync = (uri) => {
   return uriToBlob(uri).then((blob) => {
-    //calls blob passes uri to it
-    const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`); // uuid generates random unique id for the image
+    const fileRef = ref(getStorage(), `profileImages/${uuid.v4()}`);
     return uploadBytes(fileRef, blob).then(() => {
-      //when blob is ready, uploads to firebase storage
-      blob.close(); //frees up memory
-      return getDownloadURL(fileRef); //gets download url of image
+      blob.close();
+      return getDownloadURL(fileRef);
     });
   });
 };
-//same as above with the bike image
+
 const uploadBikeImageAsync = (uri) => {
   return uriToBlob(uri).then((blob) => {
     const fileRef = ref(
       getStorage(),
       `bikeImages/9d14d199-178a-412f-b978-41d741db901c`
-    ); // uuid generates random unique id for the image
+    );
     return uploadBytes(fileRef, blob).then(() => {
       blob.close();
       return getDownloadURL(fileRef);
@@ -73,7 +64,6 @@ const uploadBikeImageAsync = (uri) => {
 
 export const UserProfile = ({ userId, navigation }) => {
   const { theme } = useContext(ThemeContext);
-  console.log(navigation);
   const [user, setUser] = useState(null);
   const [newName, setNewName] = useState('');
   const [newLocation, setNewLocation] = useState('');
@@ -81,9 +71,7 @@ export const UserProfile = ({ userId, navigation }) => {
   const [newBikeImage, setNewBikeImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [userId]);
+  useEffect(() => fetchUserData(), [userId]);
 
   const fetchUserData = () => {
     if (!userId) {
@@ -91,30 +79,29 @@ export const UserProfile = ({ userId, navigation }) => {
       return;
     }
 
-    const userDocRef = doc(collection(db, 'users'), userId);
+  const userDocRef = doc(collection(db, 'users'), userId);
 
-    getDoc(userDocRef)
-      .then((userDocSnap) => {
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          setUser({
-            username: userData.username,
-            email: userData.email,
-            profileImage: userData.profileImage,
-            location: userData.location,
-            bikeImage: userData.bikeImage,
-            // other user stuff
-          });
-        }
-      })
-      .catch((error) => console.log('Error fetching user data!: ', error));
+  getDoc(userDocRef)
+    .then((userDocSnap) => {
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        setUser({
+          username: userData.username,
+          email: userData.email,
+          profileImage: userData.profileImage,
+          location: userData.location,
+          bikeImage: userData.bikeImage,
+        });
+      }
+    })
+    .catch((error) => console.log('Error fetching user data!: ', error));
   };
-  //asking permission to access device media library
+
   const handleProfileImageUpload = () => {
     ImagePicker.requestMediaLibraryPermissionsAsync()
       .then((permissionResult) => {
         if (!permissionResult.granted) {
-          alert('Permission to access camera roll is required!');
+          Alert.alert('Permission to access camera roll is required!');
           return;
         }
         return ImagePicker.launchImageLibraryAsync();
@@ -126,7 +113,7 @@ export const UserProfile = ({ userId, navigation }) => {
       })
       .catch((error) => console.log('Error during image selection!: ', error));
   };
-  //asking permission to open camera
+
   const handleCameraImageUpload = () => {
     ImagePicker.requestCameraPermissionsAsync()
       .then((permissionResult) => {
@@ -161,7 +148,6 @@ export const UserProfile = ({ userId, navigation }) => {
           return updateDoc(userDocRef, userData);
         })
         .then(() => {
-          console.log('User data updated!');
           fetchUserData();
         })
         .catch((error) => console.log('Error updating user data!: ', error));
@@ -171,15 +157,11 @@ export const UserProfile = ({ userId, navigation }) => {
           userData.bikeImage = downloadURL;
           return updateDoc(userDocRef, userData);
         })
-        .then(() => {
-          console.log('User data updated!');
-          fetchUserData();
-        })
+        .then(() => fetchUserData())
         .catch((error) => console.log('Error updating user data!: ', error));
     } else {
       updateDoc(userDocRef, userData)
         .then(() => {
-          console.log('User data updated!');
           fetchUserData();
         })
         .catch((error) => console.log('Error updating user data!: ', error));
@@ -196,7 +178,6 @@ export const UserProfile = ({ userId, navigation }) => {
     navigation.navigate('ParkingHistory');
   };
  
-
   if (!user) {
     return (
       <View style={styles.container}>
@@ -206,14 +187,11 @@ export const UserProfile = ({ userId, navigation }) => {
   }
 
   return (
-
     <ScrollView 
-  contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}
-  showsVerticalScrollIndicator={true}>
-  <View style={[styles.container, { backgroundColor: theme.background }]}>
-  
-  
-
+      contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}
+      showsVerticalScrollIndicator={true}
+    >
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.profilePictureContainer}>
         {newProfileImage ? (
           <Image
@@ -231,11 +209,13 @@ export const UserProfile = ({ userId, navigation }) => {
             style={styles.profileImage}
           />
         )}
-
         <UploadImageIcon onPress={handleProfileImageUpload} />
       </View>
 
-      <Text style={[styles.inputLabel, { color: theme.text }]}>Username</Text>
+      <Text style={[styles.inputLabel, { color: theme.text }]}>
+        Username
+      </Text>
+
       <View style={styles.inputContainer}>
         <TextInput
           value={user.username}
@@ -243,64 +223,63 @@ export const UserProfile = ({ userId, navigation }) => {
           style={styles.input}
         />
       </View>
+
       <Text style={[styles.inputLabel, { color: theme.text }]}>
         Email address
       </Text>
+
       <View style={styles.inputContainer}>
         <TextInput value={user.email} editable={false} style={styles.input} />
       </View>
+
       <Text
         onPress={() => navigation.navigate('ChangeEmail', { userId })}
         style={styles.changeEmailLink}
       >
-         Change Email
+        Change Email
       </Text>
 
       <View style={styles.buttonContainer}>
-  <TouchableOpacity
-    style={[styles.button, { backgroundColor: theme.primary }]}
-    onPress={goToHistoryScreen}
-  >
-     <View style={styles.iconContainer}>
-      <FontAwesome name="history" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
-      <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
-        View your recent history
-      </Text>
-    </View>
-  </TouchableOpacity>
-</View>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: theme.primary }]}
+          onPress={goToHistoryScreen}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome name="history" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
+            <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+              View your recent history
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
-<View style={styles.buttonContainer}>
-  <TouchableOpacity 
-    style={[styles.button, {backgroundColor: theme.primary}]} 
-    onPress={() => setModalVisible(true)}
-  >
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={[styles.button, {backgroundColor: theme.primary}]} 
+          onPress={() => setModalVisible(true)}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome name="camera" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
+            <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+              Take Bike Image
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
-    <View style={styles.iconContainer}>
-      <FontAwesome name="camera" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
-
-      <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
-        Take Bike Image
-      </Text>
-    </View>
-  </TouchableOpacity>
-</View>
-
-<View style={styles.buttonContainer}>
-  <TouchableOpacity 
-    style={[styles.button, {backgroundColor: theme.primary}]} 
-    onPress={handleSave}
-  >
-
-       <View style={styles.iconContainer}>
-      <FontAwesome name="save" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
-
-      <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
-        Save Changes
-      </Text>
-    </View>
-  </TouchableOpacity>
-</View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={[styles.button, {backgroundColor: theme.primary}]} 
+          onPress={handleSave}
+        >
+          <View style={styles.iconContainer}>
+            <FontAwesome name="save" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
+            <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+              Save Changes
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
       <Modal
         animationType="slide"
@@ -347,19 +326,15 @@ export const UserProfile = ({ userId, navigation }) => {
         
       </Text>
     </View>
-     </ScrollView>
+    </ScrollView>
   );
-  
 };
 
 const styles = StyleSheet.create({
   container: {
-    
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
-                
-  
   },
   profilePictureContainer: {
     marginTop: 50,
@@ -372,7 +347,6 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     borderWidth: 3,
   },
-
   textStyle: {
     color: '#2196f3',
     fontWeight: 'bold',
@@ -384,7 +358,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
   },
-
   buttonContainer: {
     marginTop: 30,
     width: 330,
@@ -396,7 +369,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-
   button: {
     backgroundColor: '#2196F3',
     paddingVertical: 10,
@@ -416,13 +388,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
-    marginLeft: 10,  //space out icon
-
+    marginLeft: 10,
   },
   input: {
     height: 50,
     width: 300,
-   
     margin: 5,
     padding: 10,
     borderRadius: 10,
@@ -430,12 +400,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     color: '#000',
   },
-
   inputLabel: {
     alignSelf: 'flex-start',
     fontSize: 14,
     color: '#000',
-
     marginLeft: 26,
     marginTop: 20,
   },
@@ -445,7 +413,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     fontSize: 14,
   },
-
   uploadImageIconContainer: {
     position: 'absolute',
     bottom: 35,

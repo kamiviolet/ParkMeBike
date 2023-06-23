@@ -6,6 +6,7 @@ import { UserProfile } from './UserProfile';
 import { SettingsScreen } from './SettingsScreen';
 import { ParkingHistory } from './ParkingHistory';
 import { ChangeEmail } from './ChangeEmail';
+import { Dashboard } from './Dashboard'
 
 export {
   LoginScreen,
@@ -16,4 +17,5 @@ export {
   SettingsScreen,
   ParkingHistory,
   ChangeEmail,
+  Dashboard
 };

@@ -1,7 +1,6 @@
-import { Text, View, StyleSheet, Image, Button, Item, ScrollView, FlatList } from "react-native";
-import { Link } from "react-navigation"
+import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
 import { useState } from "react";
-import Pressable from "./Pressable";
+import { Pressable } from "../components";
 
 export const AboutUs = (props, props2) => {
   const [shouldShowText, setShouldShowText] = useState(false);
@@ -12,15 +11,13 @@ export const AboutUs = (props, props2) => {
   const handleButtonClick2 = () => {
     setShouldShowText2(!shouldShowText2);
   };
+
   return (
     <ScrollView>
     <View style={styles.container}>
       <Text style={styles.h1}>Welcome To Park Me Bike</Text>
       <Text style={styles.p}>
-        Hello there! Thank you for using our App, we want to give you a little
-        more information before you get started! We are a group of Northcoders
-        students who are working together to develop a functional mobile
-        Application using new tech stacks.{" "}
+        Hello there! Thank you for using our App, we want to give you a little more information before you get started! We are a group of Northcoders students who are working together to develop a functional mobile Application using new tech stacks.{" "}
       </Text>
       <View style={styles.imageRow}>
         <Image
@@ -74,11 +71,12 @@ export const AboutUs = (props, props2) => {
 
           <Text style={styles.p}>This Policy is a legally binding agreement between you (&#8220;User&#8221;, &#8220;you&#8221; or &#8220;your&#8221;) and this Mobile Application developer (&#8220;Operator&#8221;, &#8220;we&#8221;, &#8220;us&#8221; or &#8220;our&#8221;). If you are entering into this agreement on behalf of a business or other legal entity, you represent that you have the authority to bind such entity to this agreement, in which case the terms &#8220;User&#8221;, &#8220;you&#8221; or &#8220;your&#8221; shall refer to such entity. If you do not have such authority, or if you do not agree with the terms of this agreement, you must not accept this agreement and may not access and use the Mobile Application and Services. By accessing and using the Mobile Application and Services, you acknowledge that you have read, understood, and agree to be bound by the terms of this Policy. This Policy does not apply to the practices of companies that we do not own or control, or to individuals that we do not employ or manage.</Text>
 
-
           <Text style={styles.h2} id="collection-of-personal-information">Collection of personal information</Text>
+
           <Text style={styles.p}>You can access and use the Mobile Application and Services without telling us who you are or revealing any information by which someone could identify you as a specific, identifiable individual. If, however, you wish to use some of the features offered in the Mobile Application, you may be asked to provide certain Personal Information (for example, your name and e-mail address).</Text>
 
           <Text style={styles.p}>We receive and store any information you knowingly provide to us when you create an account, publish content,  or fill any forms in the Mobile Application. When required, this information may include the following: account details (such as user name, unique user ID, password, etc),geolocation data of your device (such as latitude and longitude), and any other materials you willingly submit to us (such as articles, images, feedback, etc)</Text>
+
           <Text style={styles.p}>You can choose not to provide us with your Personal Information, but then you may not be able to take advantage of some of the features in the Mobile Application. Users who are uncertain about what information is mandatory are welcome to contact us.</Text>
 
           <Text style={styles.h2} id="privacy-of-children">Privacy of children</Text>

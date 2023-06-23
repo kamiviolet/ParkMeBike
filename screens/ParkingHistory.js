@@ -3,12 +3,11 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { db, collection, getDocs } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
 import * as Location from 'expo-location';
-import { ThemeContext } from '../providers/ThemeProvider';
+import { ThemeContext } from '../providers';
 
 export const ParkingHistory = () => {
   const [parkingSpots, setParkingSpots] = useState([]);
   const { theme, toggleTheme } = useContext(ThemeContext);
-
   const auth = getAuth();
   const userId = auth.currentUser ? auth.currentUser.uid : null;
 

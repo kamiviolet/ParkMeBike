@@ -1,17 +1,15 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import TabNavigator from './TabNavigator';
-import { View, Text } from 'react-native';
-import { ParkingHistory } from '../screens';
-import { ThemeContext } from '../providers/ThemeProvider';
 import { useContext } from 'react';
-import HeaderTitle from '../components/HeaderTitle';
-import { ChangeEmail } from '../screens';
-
+import { createStackNavigator } from '@react-navigation/stack';
+import { TabNavigator } from './TabNavigator';
+import { ParkingHistory, ChangeEmail } from '../screens';
+import { ThemeContext } from '../providers';
+import { HeaderTitle } from '../components';
 
 const Stack = createStackNavigator();
 
 export const AppStack = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  
   return (
     <Stack.Navigator>
       <Stack.Screen

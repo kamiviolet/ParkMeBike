@@ -3,7 +3,7 @@ import { Pressable, Text, StyleSheet } from 'react-native';
 
 import { Colors } from '../config';
 
-export const Button = ({
+export default Button = ({
   children,
   onPress,
   activeOpacity = 0.3,
