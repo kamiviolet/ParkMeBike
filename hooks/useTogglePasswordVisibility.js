@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useTogglePasswordVisibility = () => {
+export default useTogglePasswordVisibility = () => {
   // password will not be initially visible
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');

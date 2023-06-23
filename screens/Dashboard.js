@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';// Import Map and Marker
-import Mapframe from '../components/Mapframe';
+import { StyleSheet, View } from 'react-native';
 import * as Location from 'expo-location';
-import { LoadingIndicator } from '../components/LoadingIndicator';
+import { Mapframe, LoadingIndicator } from '../components';
 
-
-export default function Dashboard() {
+export function Dashboard() {
   const [currLocation, setCurrLocation] = useState({});
   const [locationParams, setLocationParams] = useState({
     location: {...currLocation},
@@ -23,7 +21,6 @@ export default function Dashboard() {
         } else {
           Location.watchPositionAsync(
             {
-              // Tracking options
               accuracy: Location.Accuracy.High,
               distanceInterval: 10,
             },

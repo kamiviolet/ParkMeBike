@@ -1,12 +1,10 @@
-import { StyleSheet, View, Text, Pressable, Button, Dimensions } from 'react-native';
+import { useState, useEffect, useContext } from 'react';
+import { StyleSheet, View, Text, Button, Dimensions } from 'react-native';
 import { Slider, Icon, CheckBox } from '@rneui/themed';
-import { color } from 'react-native-reanimated';
-import {Audio} from 'expo-av'
-import {useState, useEffect, useContext} from 'react'
-import {ThemeContext} from '../providers/ThemeProvider'
+import { Audio } from 'expo-av';
+import { ThemeContext } from '../providers';
 
-
-const ControlPanel = ({
+export default function ControlPanel ({
   setLocationParams,
   locationParams,
   parkingLimit,
@@ -17,41 +15,38 @@ const ControlPanel = ({
   showRoute,
   setShowRoute,
   ratchetBellSound
-}) => {
+}) {
   const [pingBellSound, setPingBellSound] = useState();
   const {theme, toggleTheme} = useContext(ThemeContext);
 
   async function playPingBell(){
-    console.log('Loading sound');
-    const {pingBellSound} = await Audio.Sound.createAsync(require('../assets/bellping.mp3'), 
-    {shouldPlay: true}
-    );
+    const pingBellSound = 
+    await Audio.Sound.createAsync(require('../assets/bellping.mp3'), {shouldPlay: true});
     setPingBellSound(pingBellSound);
   }
 
   useEffect(()=>{
     return ratchetBellSound
-    ? () => {
-      console.log('unloading sound')
-      sound.unloadAsync()
-    }
+    ? () => sound.unloadAsync()
     : undefined;
   }, [pingBellSound])
+
   return (
     <>
       <View style={theme.name === 'light' ? styles.sliderLightWrapper : styles.sliderDarkWrapper}>
-        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>Radius: {locationParams.radius} km</Text>
+        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>
+          Radius: {locationParams.radius} km
+        </Text>
         <Slider
           style={styles.radiusSlider}
           value={locationParams.radius}
-          maximumValue={100}
+          maximumValue={30}
           minimumValue={1}
           minimumTrackTintColor= {theme.primary}
           maximumTrackTintColor= {theme.text}
           step={1}
-          // allowTouchTrack
-          trackStyle={{ height: 5, backgroundColor: 'transparent' }}
-          thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
+          trackStyle={{ height: 5 }}
+          thumbStyle={{ height: 20, width: 20 }}
           thumbProps={{
             children: (
               <Icon
@@ -63,11 +58,11 @@ const ControlPanel = ({
               />
             ),
           }}
-          onSlidingComplete={(e) => {
-            setLocationParams({ ...locationParams, radius: e });
-          }}
+          onSlidingComplete={(e) => setLocationParams({ ...locationParams, radius: e })}
         />
-        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>Bike Parks: {parkingLimit}</Text>
+        <Text style={theme.name === 'light' ? styles.lightHeading : styles.darkHeading}>
+          Bike Parks: {parkingLimit}
+        </Text>
         <Slider
           style={styles.limitSlider}
           value={parkingLimit}
@@ -77,8 +72,8 @@ const ControlPanel = ({
           maximumTrackTintColor={theme.text}
           step={1}
           allowTouchTrack
-          trackStyle={{ height: 5, backgroundColor: 'transparent' }}
-          thumbStyle={{ height: 20, width: 20, backgroundColor: 'transparent' }}
+          trackStyle={{ height: 5 }}
+          thumbStyle={{ height: 20, width: 20 }}
           thumbProps={{
             children: (
               <Icon
@@ -90,9 +85,7 @@ const ControlPanel = ({
               />
             ),
           }}
-          onSlidingComplete={(e) => {
-            setParkingLimit(e);
-          }}
+          onSlidingComplete={(e) => setParkingLimit(e)}
         />
         <Text style={styles.label}></Text>
         <View style={styles.checkBoxStyle}>
@@ -111,11 +104,9 @@ const ControlPanel = ({
           title="close"
           onPress={() => {
             setModalVisible(false);
-            playPingBell()
+            playPingBell();
           }}
-        >
-          Close
-        </Button>
+        />
       </View>
     </>
   );
@@ -163,5 +154,3 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   }
 });
-
-export default ControlPanel;

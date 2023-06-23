@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from 'react';
+import { useState, useEffect, createContext } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config'; 
 
@@ -11,8 +11,6 @@ export const AuthenticatedUserProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, userAuth => {
       setUser(userAuth);
     });
-
-    // Clean up the subscription on unmount
     return () => unsubscribe();
   }, []);
 

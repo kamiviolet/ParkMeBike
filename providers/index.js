@@ -2,6 +2,16 @@ import {
     AuthenticatedUserContext,
     AuthenticatedUserProvider
   } from './AuthenticatedUserProvider';
+import {
+  ThemeProvider,
+  ThemeContext
+} from './ThemeProvider';
+
   
-  export { AuthenticatedUserContext, AuthenticatedUserProvider };
+export {
+  AuthenticatedUserContext,
+  AuthenticatedUserProvider,
+  ThemeProvider,
+  ThemeContext
+};
   

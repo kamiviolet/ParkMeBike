@@ -1,18 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Pressable } from 'react-native';
-import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
-import {
-  Images,
-  Colors,
-  auth,
-  createUserDocument,
-  getUserDocument,
-} from '../config';
+import { View, TextInput, Button, FormErrorMessage } from '../components';
+import { Colors, auth, getUserDocument} from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { loginValidationSchema } from '../utils';
 
@@ -25,11 +18,7 @@ export const LoginScreen = ({ navigation }) => {
     const { email, password } = values;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        console.log(userCredentials);
         return getUserDocument(userCredentials.user.uid);
-      })
-      .then((userDocument) => {
-        //userDocument from firestore
       })
       .catch((error) => setErrorState(error.message));
   };
@@ -37,7 +26,6 @@ export const LoginScreen = ({ navigation }) => {
     <>
       <View isSafe style={styles.container}>
         <KeyboardAwareScrollView enableOnAndroid={true}>
-          {/* LogoContainer: consits app logo and screen title */}
           <View
             style={{
               flexDirection: 'row',
@@ -45,7 +33,7 @@ export const LoginScreen = ({ navigation }) => {
               marginBottom: 10,
             }}
           >
-            <Ionicons name="bicycle" size={45} color="#fff" />
+            <Ionicons name='bicycle' size={45} color='#fff' />
             <Text
               style={{
                 color: '#fff',
@@ -74,14 +62,13 @@ export const LoginScreen = ({ navigation }) => {
               handleBlur,
             }) => (
               <>
-                {/* Input fields */}
-                <TextInput
-                  name="email"
-                  leftIconName="email"
-                  placeholder="Enter email"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  textContentType="emailAddress"
+                 <TextInput
+                  name='email'
+                  leftIconName='email'
+                  placeholder='Enter email'
+                  autoCapitalize='none'
+                  keyboardType='email-address'
+                  textContentType='emailAddress'
                   autoFocus={true}
                   value={values.email}
                   onChangeText={handleChange('email')}
@@ -92,13 +79,13 @@ export const LoginScreen = ({ navigation }) => {
                   visible={touched.email}
                 />
                 <TextInput
-                  name="password"
-                  leftIconName="key-variant"
-                  placeholder="Enter password"
-                  autoCapitalize="none"
+                  name='password'
+                  leftIconName='key-variant'
+                  placeholder='Enter password'
+                  autoCapitalize='none'
                   autoCorrect={false}
                   secureTextEntry={passwordVisibility}
-                  textContentType="password"
+                  textContentType='password'
                   rightIcon={rightIcon}
                   handlePasswordVisibility={handlePasswordVisibility}
                   value={values.password}
@@ -109,18 +96,15 @@ export const LoginScreen = ({ navigation }) => {
                   error={errors.password}
                   visible={touched.password}
                 />
-                {/* Display Screen Error Mesages */}
                 {errorState !== '' ? (
                   <FormErrorMessage error={errorState} visible={true} />
                 ) : null}
-                {/* Login button */}
                 <Button style={styles.button} onPress={handleSubmit}>
                   <Text style={styles.buttonText}>Login</Text>
                 </Button>
               </>
             )}
-          </Formik>
-          {/* Button to navigate to SignupScreen to create a new account */}
+          </Formik> 
           <Button
             style={styles.borderlessButtonContainer}
             borderless
@@ -134,13 +118,6 @@ export const LoginScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('ForgotPassword')}
           />
         </KeyboardAwareScrollView>
-      </View>
-
-      {/* App info footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          
-        </Text>
       </View>
     </>
   );

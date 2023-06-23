@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Pressable as RNPressable } from 'react-native';
 
-function Pressable({ children, style, activeOpacity, ...otherProps }) {
+export default function Pressable({ children, style, activeOpacity, ...otherProps }) {
   const _style = useCallback(
     ({ pressed }) => [{ opacity: pressed ? activeOpacity : 1 }, style && style],
     [style]
@@ -13,5 +13,3 @@ function Pressable({ children, style, activeOpacity, ...otherProps }) {
     </RNPressable>
   );
 }
-
-export default Pressable;

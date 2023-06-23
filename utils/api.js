@@ -10,11 +10,3 @@ export const fetchParking = (locationParams, limit) => {
         }).then(res => res.json())
     }
 }
-
-export const fetchPollution = (latitude, longitude)=>{
-    const URL = `http://api.openweathermap.org/data/2.5/air_pollution?lat=50&lon=-2&appid=8014378fec4b1f18ce2a4783dda26aa4`
-    return fetch(URL,{
-        method: 'GET'
-    }).then((res)=>res.json())
-    
-}

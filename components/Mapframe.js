@@ -1,21 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
   Pressable,
   Modal,
-  Button,
   Dimensions
-} from 'react-native'; // Import Map and Marker
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { fetchParking } from '../utils/api';
-import ParkingLots from './ParkingLots';
-import ControlPanel from './ControlPanel';
+} from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions'
+import { fetchParking } from '../utils/api';
+import ControlPanel from './ControlPanel';
+import ParkingLots  from './ParkingLots';
 import Icon from 'react-native-vector-icons/FontAwesome'
-import {Audio} from 'expo-av'
+import { Audio } from 'expo-av'
 
 export default function Mapframe({
   locationParams,
@@ -69,7 +67,6 @@ export default function Mapframe({
 
   if (locationParams.location != null) {
     return (
-      // <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <MapView
           ref={map}
@@ -109,18 +106,6 @@ export default function Mapframe({
             })
           }
           
-{/* 
-              {
-              isParked.parked 
-              ? <Marker
-              coordinate={{
-                latitude: isParked.latitude,
-                longitude: isParked.longitude,
-              }}
-              style={styles.bikeLocation}
-              pinColor='purple' />
-              : <></>
-              } */}
                     { 
                         showRoute && destination.latitude
                       ? <MapViewDirections 
@@ -187,7 +172,6 @@ export default function Mapframe({
         <Icon size={35} name={'flag'} style={styles.iconStyle}/>
         </Pressable>
       </View>
-      // </SafeAreaView>
     );
   }
 }
@@ -236,6 +220,5 @@ const styles = StyleSheet.create({
   },
   disabled: {
     backgroundColor: '#666666',
-
   }
 });

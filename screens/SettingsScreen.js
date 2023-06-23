@@ -11,11 +11,11 @@ import { auth, db } from '../config';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
-import { ThemeContext } from '../providers/ThemeProvider';
+import { ThemeContext } from '../providers';
 import { Switch } from '@rneui/themed';
 import { FontAwesome } from '@expo/vector-icons';
 
-const SettingsScreen = () => {
+export const SettingsScreen = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [user, setUser] = useState(null);
   const [toggle, setToggle] = useState(false);
@@ -192,5 +192,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-export default SettingsScreen;

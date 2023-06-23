@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import {
   Text,
   View,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { doc, updateDoc, collection } from 'firebase/firestore';
 import { db } from '../config';
-import { ThemeContext } from '../providers/ThemeProvider';
+import { ThemeContext } from '../providers';
 
 export const ChangeEmail = ({ route, navigation }) => {
   const { theme, toggleTheme } = useContext(ThemeContext);
