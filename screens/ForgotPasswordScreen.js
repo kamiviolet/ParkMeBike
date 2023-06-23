@@ -3,7 +3,7 @@ import { StyleSheet, Text } from 'react-native';
 import { Formik } from 'formik';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { passwordResetSchema } from '../utils';
-import { Colors, auth } from '../config';
+import { auth } from '../config';
 import { View, TextInput, Button, FormErrorMessage } from '../components';
 
 export const ForgotPasswordScreen = ({ navigation }) => {
@@ -11,10 +11,9 @@ export const ForgotPasswordScreen = ({ navigation }) => {
 
   const handleSendPasswordResetEmail = (values) => {
     const { email } = values;
-    console.log(values)
+
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        console.log('Success: Password Reset Email sent.');
         navigation.navigate('Login');
       })
       .catch((error) => setErrorState(error.message));
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: Colors.white,
+    color: "#FFFFFF",
     paddingTop: 20,
     textAlign: 'center',
     
@@ -101,7 +100,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    color: Colors.white,
+    color: "#FFF",
     fontWeight: '700'
   },
   borderlessButtonContainer: {

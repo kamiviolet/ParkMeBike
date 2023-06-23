@@ -169,7 +169,10 @@ export const UserProfile = ({ userId, navigation }) => {
   };
 
   const UploadImageIcon = ({ onPress }) => (
-    <Pressable onPress={onPress} style={styles.uploadImageIconContainer}>
+    <Pressable
+      onPress={onPress}
+      style={styles.uploadImageIconContainer}
+    >
       <FontAwesome name="camera" size={20} color="gray" />
     </Pressable>
   );
@@ -180,7 +183,9 @@ export const UserProfile = ({ userId, navigation }) => {
  
   if (!user) {
     return (
-      <View style={styles.container}>
+      <View className="
+        bg-white,
+        place-items-center">
         <Text>Loading user profile...</Text>
       </View>
     );
@@ -188,7 +193,6 @@ export const UserProfile = ({ userId, navigation }) => {
 
   return (
     <ScrollView 
-      contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}
       showsVerticalScrollIndicator={true}
     >
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -332,8 +336,6 @@ export const UserProfile = ({ userId, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFF',
-    alignItems: 'center',
     justifyContent: 'center',
   },
   profilePictureContainer: {
