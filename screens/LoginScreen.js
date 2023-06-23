@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, TextInput, Button, FormErrorMessage } from '../components';
-import { Colors, auth, getUserDocument} from '../config';
+import { auth, getUserDocument} from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { loginValidationSchema } from '../utils';
 
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: Colors.white,
+    color: "#FFF",
     paddingTop: 20,
   },
   button: {
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    backgroundColor: Colors.grey,
+    backgroundColor: "#a8a29e",
     padding: 10,
     borderRadius: 8,
   },
   buttonText: {
     fontSize: 20,
-    color: Colors.white,
+    color: "#FFF",
     fontWeight: '700',
   },
   borderlessButtonContainer: {
@@ -171,6 +171,6 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.white,
+    color: "#FFF",
   },
 });

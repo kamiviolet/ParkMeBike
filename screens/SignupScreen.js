@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { View, TextInput, Button, FormErrorMessage } from '../components';
-import { Colors, auth, db } from '../config';
+import { auth, db } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
 import { doc, setDoc } from 'firebase/firestore';
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: Colors.white,
+    color: "#FFF",
     paddingTop: 20,
   },
   button: {
@@ -183,13 +183,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
-    backgroundColor: Colors.grey,
+    backgroundColor: "#a8a29e",
     padding: 10,
     borderRadius: 8,
   },
   buttonText: {
     fontSize: 20,
-    color: Colors.white,
+    color: "#FFF",
     fontWeight: '700',
   },
   borderlessButtonContainer: {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    backgroundColor: Colors.black,
+    backgroundColor: "#000000",
     paddingHorizontal: 12,
     paddingBottom: 48,
     alignItems: 'center',
@@ -209,6 +209,6 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.white,
+    color: "#FFF",
   },
 });

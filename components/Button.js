@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
-import { Colors } from '../config';
+import { Pressable, Text } from 'react-native';
 
 export default function Button ({
   children,
@@ -18,7 +17,7 @@ export default function Button ({
   if (borderless) {
     return (
       <Pressable onPress={onPress} style={_style}>
-        <Text style={styles.borderlessButtonText}>{title}</Text>
+        <Text className="text-lg text-white">{title}</Text>
       </Pressable>
     );
   }
@@ -29,10 +28,3 @@ export default function Button ({
     </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  borderlessButtonText: {
-    fontSize: 16,
-    color: Colors.white,
-  },
-});
