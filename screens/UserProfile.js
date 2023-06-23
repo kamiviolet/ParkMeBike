@@ -183,9 +183,7 @@ export const UserProfile = ({ userId, navigation }) => {
  
   if (!user) {
     return (
-      <View className="
-        bg-white,
-        place-items-center">
+      <View style={styles.container}>
         <Text>Loading user profile...</Text>
       </View>
     );
@@ -336,6 +334,7 @@ export const UserProfile = ({ userId, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     justifyContent: 'center',
   },
   profilePictureContainer: {
