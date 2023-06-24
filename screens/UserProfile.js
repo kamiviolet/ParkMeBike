@@ -332,3 +332,4 @@ export const UserProfile = ({ userId, navigation }) => {
     </ScrollView>
   );
 };
+
