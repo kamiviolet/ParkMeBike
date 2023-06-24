@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { View, TextInput, Button, FormErrorMessage } from '../components';
+import { TextInput, Button, FormErrorMessage } from '../components';
 import { auth, db } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
@@ -52,12 +52,11 @@ export const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <View isSafe style={styles.container}>
+    <View className='bg-black h-screen justify-center flex-row items-center px-5'>
       <KeyboardAwareScrollView enableOnAndroid={true}>
-        <View style={styles.logoContainer}>
-         
-          <Text style={styles.screenTitle}>Create a new account!</Text>
-        </View>
+        <Text className='text-3xl text-center font-extrabold text-white '>
+          Create a new account!
+        </Text>
         <Formik
           initialValues={{
             username: '',
@@ -145,14 +144,16 @@ export const SignupScreen = ({ navigation }) => {
               {errorState !== '' ? (
                 <FormErrorMessage error={errorState} visible={true} />
               ) : null}
-             <Button style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Signup</Text>
+              <Button
+                  className='w-full justify-center items-center my-2 py-3 bg-gray-500 rounded'
+                  onPress={handleSubmit}>
+                <Text className='text-xl text-white font-extrabold'>Signup</Text>
               </Button> 
             </>
           )}
         </Formik>
         <Button
-          style={styles.borderlessButtonContainer}
+          className='mt-10 items-center justify-center'
           borderless
           title={'Already have an account?'}
           onPress={() => navigation.navigate('Login')}
@@ -161,54 +162,3 @@ export const SignupScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    paddingHorizontal: 12,
-    paddingTop: '50%',
-  },
-  innerContainer: {
-    alignItems: 'center',
-  },
-  screenTitle: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: "#FFF",
-    paddingTop: 20,
-  },
-  button: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-    backgroundColor: "#a8a29e",
-    padding: 10,
-    borderRadius: 8,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "#FFF",
-    fontWeight: '700',
-  },
-  borderlessButtonContainer: {
-    marginTop: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoContainer: {
-    alignItems: 'center',
-  },
-  footer: {
-    backgroundColor: "#000000",
-    paddingHorizontal: 12,
-    paddingBottom: 48,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: "#FFF",
-  },
-});

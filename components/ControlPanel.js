@@ -33,20 +33,20 @@ export default function ControlPanel ({
 
   return (
     <>
-      <View style={
+      <View className={
         theme.name === 'light'
-        ? styles.sliderLightWrapper
-        : styles.sliderDarkWrapper
+        ? 'absolute px-5 py-5 bottom-16 w-screen bg-slate-200/80'
+        : 'absolute px-5 py-5 bottom-16 w-screen bg-slate-600/80'
       }>
-        <Text style={
+        <Text className={
           theme.name === 'light'
-          ? styles.lightHeading
-          : styles.darkHeading}
-        >
+          ? 'py-2 text-black text-base font-bold'
+          : 'py-2 text-white text-base font-bold'
+        }>
           Radius: {locationParams.radius} km
         </Text>
         <Slider
-          style={styles.radiusSlider}
+          className='w-screen'
           value={locationParams.radius}
           maximumValue={30}
           minimumValue={1}
@@ -68,15 +68,15 @@ export default function ControlPanel ({
           }}
           onSlidingComplete={(e) => setLocationParams({ ...locationParams, radius: e })}
         />
-        <Text style={
+        <Text className={
           theme.name === 'light'
-          ? styles.lightHeading
-          : styles.darkHeading}
-        >
+          ? 'py-2 text-black text-base font-bold'
+          : 'py-2 text-white text-base font-bold'
+        }>
           Bike Parks: {parkingLimit}
         </Text>
         <Slider
-          style={styles.limitSlider}
+          className='w-screen'
           value={parkingLimit}
           maximumValue={10}
           minimumValue={1}
@@ -99,8 +99,7 @@ export default function ControlPanel ({
           }}
           onSlidingComplete={(e) => setParkingLimit(e)}
         />
-        <Text style={styles.label}></Text>
-        <View style={styles.checkBoxStyle}>
+        <View className='flex-row my-4 justify-between py-2'>
         <CheckBox
           title="show route"
           checked={showRoute}
@@ -123,46 +122,3 @@ export default function ControlPanel ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  sliderDarkWrapper: {
-    position: 'absolute',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    bottom: Dimensions.get('screen').width * 0.15,
-    width: '100%',
-    backgroundColor: '#000000c0',
-  },
-  sliderLightWrapper: {
-    position: 'absolute',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    bottom: Dimensions.get('screen').width * 0.15,
-    width: '100%',
-    backgroundColor: '#ccccccc0',
-  },
-  radiusSlider: {
-    width: '100%',
-  },
-  limitSlider: {
-    width: '100%',
-  },
-  darkHeading: {
-    paddingVertical: 10,
-    color: 'white',
-    fontSize: 15,
-    fontWeight: 600
-  },
-  lightHeading: {
-    paddingVertical: 10,
-    color: '#000000',
-    fontSize: 15,
-    fontWeight: 600
-  },
-  btnWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-  }
-});

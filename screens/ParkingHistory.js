@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { db, collection, getDocs } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
 import * as Location from 'expo-location';
@@ -44,14 +44,12 @@ export const ParkingHistory = () => {
   }, [userId]);
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        ...styles.container,
-        backgroundColor: theme.background,
-      }}
-    >
+    <ScrollView contentContainerStyle={{backgroundColor: theme.background}}>
       {parkingSpots.map((spot) => (
-        <View key={spot.id} style={styles.spotContainer}>
+        <View
+          key={spot.id}
+          className="bg-slate-200 w-80 self-center rounded p-4 mb-5"
+        >
           <Text>{spot.address}</Text>
         </View>
       ))}
@@ -59,17 +57,5 @@ export const ParkingHistory = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  spotContainer: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-  },
-});
 
 export default ParkingHistory;

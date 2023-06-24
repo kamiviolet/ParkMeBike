@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { Formik } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { View, TextInput, Button, FormErrorMessage } from '../components';
+import { TextInput, Button, FormErrorMessage } from '../components';
 import { auth, getUserDocument} from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { loginValidationSchema } from '../utils';
@@ -24,24 +24,11 @@ export const LoginScreen = ({ navigation }) => {
   };
   return (
     <>
-      <View isSafe style={styles.container}>
+      <View className='bg-black h-screen justify-center flex-row items-center px-5'>
         <KeyboardAwareScrollView enableOnAndroid={true}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: 10,
-            }}
-          >
-            <Ionicons name='bicycle' size={45} color='#fff' />
-            <Text
-              style={{
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: 40,
-                marginLeft: 10,
-              }}
-            >
+          <View className='flex-row'>
+            <Ionicons name='bicycle' size={35} color='#fff' />
+            <Text className='text-white font-bold text-3xl ml-5'>
               Park Me Bike
             </Text>
           </View>
@@ -99,20 +86,22 @@ export const LoginScreen = ({ navigation }) => {
                 {errorState !== '' ? (
                   <FormErrorMessage error={errorState} visible={true} />
                 ) : null}
-                <Button style={styles.button} onPress={handleSubmit}>
-                  <Text style={styles.buttonText}>Login</Text>
+                <Button
+                  className='w-full justify-center items-center my-2 py-3 bg-gray-500 rounded'
+                  onPress={handleSubmit}>
+                  <Text className='text-xl text-white font-extrabold'>Login</Text>
                 </Button>
               </>
             )}
           </Formik> 
           <Button
-            style={styles.borderlessButtonContainer}
+            className='mt-10 items-center justify-center'
             borderless
             title={'Create a new account?'}
             onPress={() => navigation.navigate('Signup')}
           />
           <Button
-            style={styles.borderlessButtonContainer}
+            className='my-3 items-center justify-center'
             borderless
             title={'Forgot Password'}
             onPress={() => navigation.navigate('ForgotPassword')}
@@ -122,55 +111,3 @@ export const LoginScreen = ({ navigation }) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    paddingHorizontal: 12,
-    paddingTop: '60%',
-  },
-  innerContainer: {
-    alignItems: 'center',
-  },
-  screenTitle: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: "#FFF",
-    paddingTop: 20,
-  },
-  button: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-    backgroundColor: "#a8a29e",
-    padding: 10,
-    borderRadius: 8,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "#FFF",
-    fontWeight: '700',
-  },
-  borderlessButtonContainer: {
-    marginTop: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 30,
-  },
-  logoContainer: {
-    alignItems: 'center',
-  },
-  footer: {
-    backgroundColor: 'black',
-    paddingHorizontal: 12,
-    paddingBottom: 48,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: "#FFF",
-  },
-});

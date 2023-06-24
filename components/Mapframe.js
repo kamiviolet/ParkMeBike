@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   Pressable,
   Modal,
-  Dimensions,
   Platform
 } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -69,11 +67,11 @@ export default function Mapframe({
 
   if (locationParams.location != null) {
     return (
-      <View style={styles.container}>
+      <View className='w-screen h-full'>
         <MapView
           ref={map}
           provider={PROVIDER_GOOGLE}
-          style={styles.mapStyle}
+          className='absolute top-0 bottom-0 left-0 right-0'
           onRegionChangeComplete={(e) => {
             setLocationParams({
               ...locationParams,
@@ -145,80 +143,37 @@ export default function Mapframe({
             ratchetBellSound={ratchetBellSound}
           />
         </Modal>
-        <Pressable style={styles.controlButton}
+        <Pressable
+          className='absolute bottom-20 right-0 m-2 z-10 p-3 bg-blue-300 rounded-full'
           onPress={() => {
             playRachetBell()
             setModalVisible(!modalVisible)
             }}
         >
-        <Icon size={35} name={'sliders'} style={styles.iconStyle}/>
+        <Icon size={35} name={'sliders'}/>
         </Pressable>
         {
           destination.latitude && showRoute
           ? <>
-            <View style={{position: 'absolute', width: 175, minheight: 50, backgroundColor: '#b4cfec', left: 25, bottom: 25, padding: 10 }}>
-              <Text style={{fontWeight: 800, paddingBottom: 10}}>Distance to Parking Lot:</Text>
+            <View className='absolute w-44 h-20 bg-slate-200 left-5 bottom-5 p-2'>
+              <Text className='font-black pb-5'>Distance to Parking Lot:</Text>
               <Text>{destination.distance} km</Text>
             </View>
           </>
           : <></>
         }
-        <Pressable style={isParked.parked? [styles.parkingButton, styles.abled]: [styles.parkingButton, styles.disabled] } disabled={isParked.parked? false: true}
+        <Pressable
+          style={isParked.parked? {backgroundColor: '#ffaf7a'}: {backgroundColor: '#cccccc'}}
+          className='absolute bottom-40 right-0 m-2 z-10 p-3 rounded-full'
+          disabled={isParked.parked? false: true}
           onPress={() => {
           map.current?.animateCamera({center:
           {latitude: isParked.latitude, longitude: isParked.longitude}, zoom: 15
           }, 2000)}}
         >
-        <Icon size={35} name={'flag'} style={styles.iconStyle}/>
+        <Icon size={35} name={'flag'}/>
         </Pressable>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'flex-end',
-  },
-  mapStyle: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: -1,
-  },
-  controlButton: {
-    position: 'absolute',
-    bottom: 80,
-    right: 0,
-    margin: 15,
-    zIndex: 5,
-    padding: 10,
-    backgroundColor: '#2D8CFF',
-    borderRadius: Dimensions.get('window').width * 0.5,
-  },
-  iconStyle: {
-    color: '#ffffff'
-  },
-  bikeLocation: {
-    zIndex: 7,
-  },
-  parkingButton: {
-    position: 'absolute',
-    bottom: 160,
-    right: 0,
-    margin: 15,
-    zIndex: 5,
-    padding: 10,
-    borderRadius: Dimensions.get('window').width * 0.5,
-  },
-  abled: {
-    backgroundColor: '#ffaf7a',
-  },
-  disabled: {
-    backgroundColor: '#666666',
-  }
-});
