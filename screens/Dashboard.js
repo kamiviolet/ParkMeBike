@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import * as Location from 'expo-location';
 import { Mapframe, LoadingIndicator } from '../components';
 
@@ -50,20 +50,8 @@ export function Dashboard() {
     )
   }
     return (
-      <>
-      <View style={styles.parentContainer}>
+      <View className='absolute top-0 left-0 right-0 bottom-0'>
         <Mapframe locationParams={locationParams} setLocationParams={setLocationParams} currLocation={currLocation}/>
       </View>
-      </>
     );
 };
-
-const styles = StyleSheet.create({
-  parentContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-});

@@ -20,9 +20,9 @@ export const ForgotPasswordScreen = ({ navigation }) => {
   };
 
    return (
-    <View isSafe style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.screenTitle}>Reset your password</Text>
+    <View isSafe className='justify-center bg-slate-900 w-screen mx-20'>
+      <View className=''>
+        <Text className='text-2xl font-extra-bold text-black pt-2 text-center'>Reset your password</Text>
       </View>
       <Formik
         initialValues={{ email: '' }}
@@ -55,14 +55,14 @@ export const ForgotPasswordScreen = ({ navigation }) => {
               ? <FormErrorMessage error={errorState} visible={true} />
               : null
               }
-            <Button style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Send Reset Email</Text>
+            <Button className='w-full place-items-center mt-1/2 p-2 rounded' onPress={handleSubmit}>
+              <Text className='text-xl text-black font-extra-bold'>Send Reset Email</Text>
             </Button> 
           </>
         )}
       </Formik>
       <Button
-        style={styles.borderlessButtonContainer}
+        className='mt-2 place-items-center'
         borderless
         title={'Go back to Login'}
         onPress={() => navigation.navigate('Login')}
@@ -70,42 +70,3 @@ export const ForgotPasswordScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-    paddingHorizontal: 12,
-    paddingTop: '60%',
-  },
-  innercontainer: {
-    alignItems: 'center'
-  },
-  screenTitle: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: "#FFFFFF",
-    paddingTop: 20,
-    textAlign: 'center',
-    
-  },
-  button: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-   
-    padding: 10,
-    borderRadius: 8
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "#FFF",
-    fontWeight: '700'
-  },
-  borderlessButtonContainer: {
-    marginTop: 16,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});

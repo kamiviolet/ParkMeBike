@@ -10,7 +10,7 @@ export default function TextInput ({
   ...otherProps
 }) {
   return (
-    <View className="bg-white rounded flex-row p-12 my-12 w-full border-1 border-slate-50">
+    <View className="bg-slate-100 rounded flex-row p-3 my-5 w-full border-1 border-slate-500">
       {
         leftIconName 
         ? (<Icon
