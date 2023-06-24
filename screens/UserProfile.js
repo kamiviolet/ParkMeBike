@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   TextInput,
   Pressable,
   Modal,
@@ -168,121 +167,124 @@ export const UserProfile = ({ userId, navigation }) => {
     }
   };
 
-  const UploadImageIcon = ({ onPress }) => (
-    <Pressable
-      onPress={onPress}
-      style={styles.uploadImageIconContainer}
-    >
-      <FontAwesome name="camera" size={20} color="gray" />
-    </Pressable>
-  );
-
   const goToHistoryScreen = () => {
     navigation.navigate('ParkingHistory');
   };
  
   if (!user) {
     return (
-      <View style={styles.container}>
-        <Text>Loading user profile...</Text>
+      <View className="bg-white">
+        <Text className="text-blue-700 font-bold text-xs p-10 text-center">Loading user profile...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView 
-      showsVerticalScrollIndicator={true}
-    >
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.profilePictureContainer}>
-        {newProfileImage ? (
+    <ScrollView showsVerticalScrollIndicator={true}>
+      <View
+        className='w-screen h-screen items-center'
+        style={{backgroundColor: theme.background}}>
+        <View className='mt-10 w-64 h-64'>
           <Image
-            source={{ uri: newProfileImage }}
-            style={styles.profileImage}
+            className='self-center rounded w-full h-full' 
+            source={
+              newProfileImage
+              ? {uri: newProfileImage}
+              : user && user.profileImage
+              ? {uri: user.profileImage}
+              : require('../assets/profile-placeholder.png')
+            }
           />
-        ) : user && user.profileImage ? (
-          <Image
-            source={{ uri: user.profileImage }}
-            style={styles.profileImage}
-          />
-        ) : (
-          <Image
-            source={require('../assets/profile-placeholder.png')}
-            style={styles.profileImage}
-          />
-        )}
-        <UploadImageIcon onPress={handleProfileImageUpload} />
-      </View>
+          <Pressable
+            onPress={handleProfileImageUpload}
+            className='absolute right-10 bottom-0 bg-white rounded-full p-5'
+          >
+            <FontAwesome name="camera" size={20} color="gray" />
+          </Pressable>
+        </View>
+      
+      <View className='my-3 px-10 w-screen'>
+        <Text className='text-base' style={{ color: theme.text }}>
+          Username
+        </Text>
 
-      <Text style={[styles.inputLabel, { color: theme.text }]}>
-        Username
-      </Text>
-
-      <View style={styles.inputContainer}>
         <TextInput
           value={user.username}
           editable={false}
-          style={styles.input}
+          className='bg-slate-100 text-black text-base rounded p-2 my-2 w-full h-12'
         />
       </View>
 
-      <Text style={[styles.inputLabel, { color: theme.text }]}>
-        Email address
-      </Text>
-
-      <View style={styles.inputContainer}>
-        <TextInput value={user.email} editable={false} style={styles.input} />
-      </View>
-
-      <Text
-        onPress={() => navigation.navigate('ChangeEmail', { userId })}
-        style={styles.changeEmailLink}
-      >
-        Change Email
-      </Text>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: theme.primary }]}
-          onPress={goToHistoryScreen}
+      <View className='my-3 px-10 w-screen'>
+        <Text className='text-base' style={{ color: theme.text }}>
+          Email address
+        </Text>
+        <TextInput
+          value={user.email}
+          editable={false}
+          className='bg-slate-100 text-black text-base rounded p-2 my-2 w-full h-12'
+        />
+        <Text
+          onPress={() => navigation.navigate('ChangeEmail', { userId })}
+          className='text-blue-600 my-3'
         >
-          <View style={styles.iconContainer}>
-            <FontAwesome name="history" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
-            <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+          Change Email
+        </Text>
+      </View>
+      <View className='px-10 w-screen'>
+        <TouchableOpacity
+          style={{ backgroundColor: theme.primary }}
+          onPress={goToHistoryScreen}
+          className='py-3 px-2 my-3 rounded w-full shadow-black flex-row justify-center'
+        >
+            <FontAwesome
+              name="history"
+              size={24}
+              color={theme.name === 'dark' ? 'black' : 'white'}
+            />
+            <Text
+              className='text-xl font-extrabold ml-2'
+              style={{ color: theme.name === 'dark' ? 'black' : 'white' }}
+            >
               View your recent history
             </Text>
-          </View>
         </TouchableOpacity>
-      </View>
 
-      <View style={styles.buttonContainer}>
         <TouchableOpacity 
-          style={[styles.button, {backgroundColor: theme.primary}]} 
+          className='py-3 px-2 my-3 rounded w-full shadow-black flex-row justify-center'
+          style={{backgroundColor: theme.primary}} 
           onPress={() => setModalVisible(true)}
         >
-          <View style={styles.iconContainer}>
-            <FontAwesome name="camera" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
-            <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+            <FontAwesome
+              name="camera"
+              size={24}
+              color={theme.name === 'dark' ? 'black' : 'white'}
+            />
+            <Text
+              className='text-white text-xl font-extrabold ml-2'
+              style={{ color: theme.name === 'dark' ? 'black' : 'white'}}
+            >
               Take Bike Image
             </Text>
-          </View>
         </TouchableOpacity>
-      </View>
-
-      <View style={styles.buttonContainer}>
         <TouchableOpacity 
-          style={[styles.button, {backgroundColor: theme.primary}]} 
+          className='py-3 px-2 my-3 rounded w-full shadow-black flex-row justify-center'
+          style={{backgroundColor: theme.primary}} 
           onPress={handleSave}
         >
-          <View style={styles.iconContainer}>
-            <FontAwesome name="save" size={24} color={theme.mode === 'dark' ? 'black' : 'white'} />
-            <Text style={[styles.buttonText, { color: theme.mode === 'dark' ? 'black' : 'white', marginLeft: 10 }]}>
+            <FontAwesome
+              name="save"
+              size={24}
+              color={theme.name === 'dark' ? 'black' : 'white'}
+            />
+            <Text
+              className='text-white text-xl font-extrabold ml-2'
+              style={{ color: theme.name === 'dark' ? 'black' : 'white'}}
+            >
               Save Changes
             </Text>
-          </View>
         </TouchableOpacity>
       </View>
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -292,26 +294,23 @@ export const UserProfile = ({ userId, navigation }) => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {newBikeImage ? (
+        <View>
+          <View className='m-5 bg-white rounded p-8 items-center shadow-slate-900/20'>
               <Image
-                source={{ uri: newBikeImage }}
-                style={styles.profileImage}
+                source={
+                  newBikeImage
+                  ? { uri: newBikeImage }
+                  : { uri: user.bikeImage }
+                }
+                className='w-64 h-64'
               />
-            ) : (
-              <Image
-                source={{ uri: user.bikeImage }}
-                style={styles.bikeImage}
-              />
-            )}
-
-            <Text style={styles.textStyle} onPress={handleCameraImageUpload}>
-              Take Bike Image
-            </Text>
-
             <Text
-              style={styles.textStyle}
+              className='font-bold text-center text-xl p-2 text-blue-700'
+              onPress={handleCameraImageUpload}>
+              Take Bike Image 
+            </Text>
+            <Text
+              className='text-blue-700 font-bold text-xs p-10 text-center'
               onPress={() => setModalVisible(!modalVisible)}
             >
               Close
@@ -319,128 +318,18 @@ export const UserProfile = ({ userId, navigation }) => {
           </View>
         </View>
       </Modal>
-
-      <Text style={styles.textStyle} onPress={() => setModalVisible(true)}>
-        
+      <Text
+        className='text-blue-700 font-bold text-xs p-10 text-center'
+        onPress={() => setModalVisible(true)}
+      >
       </Text>
-
-      <Text style={styles.textStyle} onPress={handleSave}>
-        
+      <Text
+        className='text-blue-700 font-bold text-xs p-10 text-center'
+        onPress={handleSave}
+      >
       </Text>
     </View>
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  profilePictureContainer: {
-    marginTop: 50,
-  },
-  profileImage: {
-    width: 125,
-    height: 125,
-    borderRadius: 75,
-    marginBottom: 30,
-    borderColor: '#fff',
-    borderWidth: 3,
-  },
-  textStyle: {
-    color: '#2196f3',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: 18,
-    padding: 10,
-  },
-  bikeImage: {
-    width: 200,
-    height: 200,
-  },
-  buttonContainer: {
-    marginTop: 30,
-    width: 330,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-  },
-  button: {
-    backgroundColor: '#2196F3',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 4,
-    width: '90%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 6.27,
-    elevation: 0.8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 10,
-  },
-  input: {
-    height: 50,
-    width: 300,
-    margin: 5,
-    padding: 10,
-    borderRadius: 10,
-    fontSize: 16,
-    backgroundColor: '#F6F6F6',
-    color: '#000',
-  },
-  inputLabel: {
-    alignSelf: 'flex-start',
-    fontSize: 14,
-    color: '#000',
-    marginLeft: 26,
-    marginTop: 20,
-  },
-  changeEmailLink: {
-    color: '#2196f3',
-    marginLeft: 26,
-    alignSelf: 'flex-start',
-    fontSize: 14,
-  },
-  uploadImageIconContainer: {
-    position: 'absolute',
-    bottom: 35,
-    right: 0,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 5,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-});

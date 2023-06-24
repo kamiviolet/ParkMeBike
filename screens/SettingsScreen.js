@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Alert,
   TouchableOpacity,
   ScrollView,
@@ -68,67 +67,49 @@ export const SettingsScreen = () => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: theme.background },
-      ]}
-    >
-      <View style={styles.headingContainer}>
-        <Text style={[styles.headingText, { color: theme.text }]}>
+    <ScrollView contentContainerStyle={{ backgroundColor: theme.background }}>
+      <View className='flex-1 w-screen px-10 h-screen items-center justify-center pb-20'>
+        <Text className='text-3xl pb-5 uppercase font-extrabold' style={{ color: theme.text }}>
           Settings
         </Text>
-      </View>
 
-      <View style={styles.switchContainer}>
-        <Text style={[styles.textStyle, { color: theme.text }]}>
-          Toggle Theme
-        </Text>
-        <Switch
-          value={toggle}
-          onValueChange={() => {
-            toggleTheme();
-            setToggle(!toggle);
-          }}
-        />
-      </View>
+        <View className='flex-row items-center mb-5'>
+          <Text className='text-xl p-2' style={{ color: theme.text }}>
+            Toggle Theme
+          </Text>
+          <Switch
+            value={toggle}
+            onValueChange={() => {
+              toggleTheme();
+              setToggle(!toggle);
+            }}
+          />
+        </View>
 
-      <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: theme.primary }]}
+          className='py-2 my-2 rounded w-full shadow-slate-900/20'
+          style={{ backgroundColor: theme.primary }}
           onPress={handleLogout}
         >
-          <View style={styles.iconContainer}>
+          <View className='flex-row justify-center items-center w-full'>
             <FontAwesome
               name="sign-out"
               size={24}
               color={theme.mode === 'dark' ? 'black' : 'white'}
             />
-            <Text
-              style={[
-                styles.buttonText,
-                {
-                  color: theme.mode === 'dark' ? 'black' : 'white',
-                  marginLeft: 10,
-                },
-              ]}
-            >
+            <Text className='text-base font-bold text-white ml-1'>
               Sign Out
             </Text>
           </View>
         </TouchableOpacity>
-      </View>
 
-      <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#E53935' }]}
+          className='py-2 my-2 rounded w-full shadow-slate-900/20 bg-red-500'
           onPress={deleteAccount}
         >
-          <View style={styles.iconContainer}>
+          <View className='flex-row justify-center items-center w-full'>
             <FontAwesome name="trash-o" size={24} color="white" />
-            <Text
-              style={[styles.buttonText, { color: 'white', marginLeft: 10 }]}
-            >
+            <Text className='text-base font-bold text-white ml-1'>
               Delete Account
             </Text>
           </View>
@@ -137,58 +118,3 @@ export const SettingsScreen = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 40,
-  },
-  headingContainer: {
-    marginBottom: 30,
-  },
-  headingText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  textStyle: {
-    fontSize: 18,
-    marginRight: 10,
-  },
-  buttonContainer: {
-    marginBottom: 20,
-    width: 330,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 4,
-    width: '90%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.14,
-    shadowRadius: 6.27,
-    elevation: 0.8,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'center',
-  },
-});

@@ -4,7 +4,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
 } from 'react-native';
 import { doc, updateDoc, collection } from 'firebase/firestore';
 import { db } from '../config';
@@ -18,58 +17,28 @@ export const ChangeEmail = ({ route, navigation }) => {
   const handleSave = () => {
     const userDocRef = doc(collection(db, 'users'), userId);
     updateDoc(userDocRef, { email: newEmail })
-      .then(() => {
-        console.log('User email updated!');
-        navigation.goBack();
-      })
+      .then(() => navigation.goBack())
       .catch((error) => console.log('Error updating user email!: ', error));
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-        backgroundColor: theme.background,
-      }}
-    >
-      <Text style={{ fontSize: 16, marginBottom: 10, color: theme.text }}>
+    <View className="flex-1 justify-center w-screen p-10 bg-white">
+      <Text className="text-base" style={{color: theme.text }}>
         Enter new email:
       </Text>
       <TextInput
         value={newEmail}
         onChangeText={setNewEmail}
-        style={{
-          height: 40,
-          borderColor: 'lightgray',
-          borderWidth: 1,
-          borderRadius: 10,
-          marginBottom: 10,
-          paddingLeft: 10,
-          backgroundColor: theme.isLight ? 'grey' : 'white',
-          color: 'black',
-        }}
+        className='h-10 border-gray-300 border-px rounded my-8 pl-2 text-black'
+        style={{backgroundColor: theme.name == 'light' ? 'lightgrey' : 'white'}}
       />
       <TouchableOpacity
         onPress={handleSave}
-        style={[styles.button, { backgroundColor: theme.primary }]}
+        className='items-center py-1 px-2 my-8 rounded'
+        style={{ backgroundColor: theme.primary }}
       >
-        <Text style={styles.buttonText}>Save</Text>
+        <Text className='text-white text-2xl'>Save</Text>
       </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-});

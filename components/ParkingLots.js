@@ -111,21 +111,21 @@ export default function ParkingLots({
       }
     >
       <Callout
-        style={styles.callout}
+        className='text-white w-60 h-52 p-2'
         onPress={() => saveGeoLocation()}
       >
-        <Text style={styles.getBike}>{calloutText}</Text>
+        <Text className='bg-blue-600 font-bold text-white py-2 mb-1 text-center'>{calloutText}</Text>
           {Platform.OS === "ios" 
           ? (
           <Image 
-            style={styles.thumbnail}
+            className='w-full h-full'
             source={{
             uri: `https://maps.googleapis.com/maps/api/streetview?size=350x400&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
             }}
           />)
           : (
           <WebView
-            style={styles.thumbnail}
+            className='w-full h-full'
             source={{
             uri: `https://maps.googleapis.com/maps/api/streetview?size=350x400&location=${geometry.coordinates[1]},${geometry.coordinates[0]}&fov=80&heading=70&pitch=0&key=AIzaSyC8A14aH5FwMCQ9JYtDh9mPp0IFxKSdmT4`,
             }}
@@ -135,33 +135,3 @@ export default function ParkingLots({
     </Marker>
   )
 }
-
-const styles = StyleSheet.create({
-  thumbnail: {
-   width: '100%',
-   height: '80%'
-  },
-  callout: {
-    borderColor: "blue",
-    overflow: "hidden",
-    color: "white",
-    padding: 5,
-    width: 220,
-    height: 200,
-  },
-  getBike: {
-    backgroundColor: "#2196F3",
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "white",
-    paddingVertical: 10,
-    marginBottom: 2
-  },
-  parkBike: {
-    backgroundColor: "#2196F3",
-    fontWeight: "bold",
-    textAlign: "center",
-    color: 'white',
-    marginBottom: 2
-  },
-});

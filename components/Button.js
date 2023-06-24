@@ -17,7 +17,7 @@ export default function Button ({
   if (borderless) {
     return (
       <Pressable onPress={onPress} style={_style}>
-        <Text className="text-lg text-white">{title}</Text>
+        <Text className="text-2xl text-white px-2">{title}</Text>
       </Pressable>
     );
   }
